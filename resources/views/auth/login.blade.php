@@ -60,59 +60,59 @@
   <body>
     <!-- Content -->
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">AppSurvey</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('auth.login') }}">Login</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div class="container-xxl">
+      <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+          <!-- Register -->
+          <div class="card">
+            <div class="card-body">
+              <!-- Logo -->
+              <div class="app-brand justify-content-center">
+                <a href="/" class="app-brand-link gap-2">
+                  <span class="app-brand-text demo text-body fw-bolder">Login</span>
+                </a>
+              </div>
+              <!-- /Logo -->
+              <h4 class="mb-2">Welcome! 👋</h4>
+              <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-    <!-- Survey Form -->
-    <div class="container mt-5">
-        <h2 class="text-center">User Satisfaction Survey</h2>
-        <p class="text-center">We appreciate your feedback to help us improve our application.</p>
-        <form action="#" method="POST">
-            <div class="mb-3">
-                <label for="username" class="form-label">Name (optional)</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your name">
+              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="email"
+                    name="email-username"
+                    placeholder="Enter your email or username"
+                    autofocus
+                  />
+                </div>
+                <div class="mb-3 form-password-toggle">
+                  <div class="d-flex justify-content-between">
+                    <label class="form-label" for="password">Password</label>
+                  </div>
+                  <div class="input-group input-group-merge">
+                    <input
+                      type="password"
+                      id="password"
+                      class="form-control"
+                      name="password"
+                      placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                      aria-describedby="password"
+                    />
+                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                </div>
+              </form>
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email (optional)</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">How satisfied are you with the application?</label>
-                <select class="form-select" name="satisfaction" required>
-                    <option value="">Select an option</option>
-                    <option value="very_satisfied">Very Satisfied</option>
-                    <option value="satisfied">Satisfied</option>
-                    <option value="neutral">Neutral</option>
-                    <option value="dissatisfied">Dissatisfied</option>
-                    <option value="very_dissatisfied">Very Dissatisfied</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="feedback" class="form-label">Additional Comments</label>
-                <textarea class="form-control" id="feedback" name="feedback" rows="3" placeholder="Share your thoughts..."></textarea>
-            </div>
-            <div class="mb-3 text-center">
-                <button type="submit" class="btn btn-primary">Submit Feedback</button>
-            </div>
-        </form>
+          </div>
+          <!-- /Register -->
+        </div>
+      </div>
     </div>
 
     <!-- Core JS -->
