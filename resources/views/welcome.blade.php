@@ -61,56 +61,121 @@
     <!-- Content -->
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #5f61e6;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">AppSurvey</a>
+            <a class="navbar-brand" href="#" style="color: white;">Survey</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('auth.login') }}">Login</a>
+                        <a class="nav-link" href="{{ route('auth.login') }}" style="color: white;">Login</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
+
+
     <!-- Survey Form -->
     <div class="container mt-5">
-        <h2 class="text-center">User Satisfaction Survey</h2>
-        <p class="text-center">We appreciate your feedback to help us improve our application.</p>
+        <h2 class="text-center">Survei Kepuasan Pengguna</h2>
+        <p class="text-center">Kami menghargai umpan balik Anda untuk membantu kami meningkatkan aplikasi kami.</p>
         <form action="#" method="POST">
             <div class="mb-3">
                 <label for="username" class="form-label">Name (optional)</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your name">
+                <input type="text" class="form-control shadow-sm" id="username" name="username" placeholder="Enter your name">
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email (optional)</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+                <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Enter your email">
             </div>
             <div class="mb-3">
-                <label class="form-label">How satisfied are you with the application?</label>
-                <select class="form-select" name="satisfaction" required>
-                    <option value="">Select an option</option>
-                    <option value="very_satisfied">Very Satisfied</option>
-                    <option value="satisfied">Satisfied</option>
-                    <option value="neutral">Neutral</option>
-                    <option value="dissatisfied">Dissatisfied</option>
-                    <option value="very_dissatisfied">Very Dissatisfied</option>
-                </select>
+                <table class="table table-striped bg-white shadow-sm">
+                            <tbody>
+                                <tr>
+                                    <th scope="row"> </th>
+                                    <td class="text-center">Sangat Puas</td>
+                                    <td class="text-center">Puas</td>
+                                    <td class="text-center">Tidak Puas</td>
+                                    <td class="text-center">Sangat Tidak Puas</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Seberapa puas Anda dengan kemudahan penggunaan aplikasi sentuh tanah?</th>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Seberapa intuitif antarmuka pengguna aplikasi sentuh tanah?</th>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Apakah aplikasi sentuh tanah responsif saat digunakan?</th>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Seberapa puas Anda dengan kelengkapan fitur yang tersedia di sentuh tanah?</th>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Apakah fitur aplikasi sentuh tanah sesuai kebutuhan Anda?</th>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Seberapa puas Anda dengan stabilitas sentuh tanah <small>(tidak ada crash/error)</small>?</th>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Seberapa puas Anda dengan tampilan dan desain antarmuka aplikasi sentuh tanah?</th>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Seberapa puas Anda dengan layanan dukungan pelanggan aplikasi sentuh tanah?</th>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Seberapa puas Anda dengan tingkat keamanan dan privasi yang ditawarkan?</th>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                    <td class="text-center"><input class="form-check-input" type="radio" name="" id=""></td>
+                                </tr>
+                            </tbody>
+                </table>
             </div>
             <div class="mb-3">
                 <label for="feedback" class="form-label">Additional Comments</label>
-                <textarea class="form-control" id="feedback" name="feedback" rows="3" placeholder="Share your thoughts..."></textarea>
+                <textarea class="form-control shadow-sm" id="feedback" name="feedback" rows="3"
+                    placeholder="Share your thoughts..."></textarea>
             </div>
             <div class="mb-3 text-center">
-                <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                <button type="submit" class="btn btn-primary shadow">Submit Feedback</button>
             </div>
         </form>
     </div>
