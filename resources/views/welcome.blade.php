@@ -59,7 +59,6 @@
 
   <body>
     <!-- Content -->
-
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #5f61e6;">
         <div class="container-fluid">
@@ -84,14 +83,15 @@
     <div class="container mt-5">
         <h2 class="text-center">Survei Kepuasan Pengguna</h2>
         <p class="text-center">Kami menghargai umpan balik Anda untuk membantu kami meningkatkan aplikasi kami.</p>
-        <form action="#" method="POST">
+        <form action="{{ route('welcome.save') }}" method="POST">
+            @csrf
             <div class="mb-3">
-                <label for="username" class="form-label">Name (optional)</label>
-                <input type="text" class="form-control shadow-sm" id="username" name="username" placeholder="Enter your name">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Enter your email">
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Email (optional)</label>
-                <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Enter your email">
+                <label for="username" class="form-label">Name</label>
+                <input type="text" class="form-control shadow-sm" id="name" name="name" placeholder="Enter your name">
             </div>
             <div class="mb-3">
                 <table class="table table-striped bg-white shadow-sm">
@@ -199,5 +199,6 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    @include('sweetalert::alert')
   </body>
 </html>

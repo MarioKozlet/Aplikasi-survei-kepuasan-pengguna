@@ -63,28 +63,28 @@
                         <div data-i18n="Analytics">Dashboard</div>
                     </a>
                 </li>
-
+                {{-- 
                 <li class="menu-header small text-uppercase">
-                    <span class="menu-header-text">Setting</span>
+                    <span class="menu-header-text">Pengaturan</span>
                 </li>
                 <li class="menu-item">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                        <div data-i18n="Account Settings">Account Settings</div>
+                        <div data-i18n="Account Settings">Pengaturan Akun</div>
                     </a>
                     <ul class="menu-sub">
                         <li class="menu-item">
                             <a href="pages-account-settings-account.html" class="menu-link">
-                                <div data-i18n="Account">Account</div>
+                                <div data-i18n="Account">Profile</div>
                             </a>
                         </li>
                         <li class="menu-item">
                             <a href="pages-account-settings-notifications.html" class="menu-link">
-                                <div data-i18n="Notifications">User</div>
+                                <div data-i18n="Notifications">Akun</div>
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 <li class="menu-header small text-uppercase">
                     <span class="menu-header-text">Main Menu</span>
                 </li>
@@ -95,13 +95,13 @@
                     </a>
                     <ul class="menu-sub">
                         <li class="menu-item">
-                            <a href="pages-account-settings-account.html" class="menu-link">
-                                <div data-i18n="Account">Account</div>
+                            <a href="{{ route('survey.index') }}" class="menu-link">
+                                <div data-i18n="Account">Data Survei</div>
                             </a>
                         </li>
                         <li class="menu-item">
                             <a href="pages-account-settings-notifications.html" class="menu-link">
-                                <div data-i18n="Notifications">Notifications</div>
+                                <div data-i18n="Notifications">Survei Analisis</div>
                             </a>
                         </li>
                     </ul>

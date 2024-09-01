@@ -13,19 +13,19 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login()
+    public function login(Request $request)
     {
         // Validasi input
         $credentials = $request->validate([
             'email' => ['required', 'email:dns'],
             'password' => ['required'],
         ]);
-
-        // Attempt login
+        
+        // Attempt login);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             // Redirect ke halaman home setelah login berhasil
-            return redirect()->intended()->route('dashboard.index');
+            return redirect()->intended('/dashboard');
         }
 
         // Jika login gagal

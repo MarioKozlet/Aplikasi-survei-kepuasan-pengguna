@@ -14,9 +14,9 @@
                     <div class="d-flex align-items-end row">
                         <div class="col-sm-7">
                             <div class="card-body">
-                                <h5 class="card-title text-primary">Hai!</h5>
+                                <h4 class="card-title text-primary"><strong>Hai !</strong></h4>
                                 <p class="mb-4">
-                                    Welcome back to dashboard
+                                    Selamat datang di halam dashboard
                                 </p>
                             </div>
                         </div>
