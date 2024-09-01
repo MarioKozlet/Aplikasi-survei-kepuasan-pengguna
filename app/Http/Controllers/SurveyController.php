@@ -18,6 +18,7 @@ class SurveyController extends Controller
             2 => 0,
             3 => 0,
             4 => 0,
+            5 => 0,
         ];
 
         // Tentukan nama field survei yang relevan (ubah sesuai dengan field yang ada di tabel survei)
