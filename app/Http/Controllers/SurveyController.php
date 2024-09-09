@@ -4,24 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Survey;
+use Phpml\Classification\KNearestNeighbors;
+use Phpml\Dataset\ArrayDataset;
 
 class SurveyController extends Controller 
 {
     public function indexSurvey()
     {
-    // Ambil semua data survei
+        // Ambil semua data survei
         $surveys = Survey::all();
 
-        // Inisialisasi array untuk menyimpan jumlah responden untuk setiap tingkat kepuasan
-        $satisfactionLevels = [
-            1 => 0,
-            2 => 0,
-            3 => 0,
-            4 => 0,
-            5 => 0,
+        // Inisialisasi array untuk menyimpan data dan target untuk algoritma
+        $samples = [];
+        $labels = [];
+        $ageGroupsData = [
+            '20-35' => [0, 0, 0, 0, 0],
+            '36-45' => [0, 0, 0, 0, 0],
+            '46-60' => [0, 0, 0, 0, 0],
         ];
 
-        // Tentukan nama field survei yang relevan (ubah sesuai dengan field yang ada di tabel survei)
+        // Tentukan nama field survei yang relevan
         $surveyFields = [
             'ease_of_use',
             'interface_intuitiveness',
@@ -34,29 +36,68 @@ class SurveyController extends Controller
             'security_and_privacy'
         ];
 
-        // Hitung jumlah responden untuk setiap tingkat kepuasan
+        // Ambil data dan label dari survei
         foreach ($surveys as $survey) {
-            foreach ($surveyFields as $field) {
-                if (isset($survey[$field])) {
-                    $value = $survey[$field];
-                    if (isset($satisfactionLevels[$value])) {
-                        $satisfactionLevels[$value]++;
+            $age = $survey->age; // Asumsi field umur adalah 'age'
+            $ageGroup = $this->getAgeGroup($age);
+
+            if ($ageGroup) {
+                $sample = [];
+                foreach ($surveyFields as $field) {
+                    $sample[] = $survey[$field] ?? 0; // Tambahkan nilai survei ke sample
+                }
+
+                $samples[] = $sample; // Tambahkan sample ke array samples
+                $labels[] = $ageGroup; // Tambahkan kelompok umur sebagai label
+
+                // Update ageGroupsData
+                foreach ($surveyFields as $index => $field) {
+                    if (isset($survey[$field])) {
+                        $value = $survey[$field];
+                        if ($value >= 1 && $value <= 5) {
+                            $ageGroupsData[$ageGroup][$value - 1]++;
+                        }
                     }
                 }
             }
         }
 
+        // Buat dataset
+        $dataset = new ArrayDataset($samples, $labels);
+
+        // Inisialisasi dan train KNearestNeighbors Classifier
+        $classifier = new KNearestNeighbors();
+        $classifier->train($dataset->getSamples(), $dataset->getTargets());
+
+        // Prediksi kelompok umur untuk data survei baru (contoh)
+        $newSurvey = [5, 4, 4, 5, 5, 4, 5, 4, 5]; // Contoh data survei baru
+        $predictedAgeGroup = $classifier->predict($newSurvey);
+
+        // Hasil prediksi
+        $prediksi = [
+            'survey' => $newSurvey,
+            'predicted_age_group' => $predictedAgeGroup
+        ];
+
         return view('survey.indexSurvey', [
-            'satisfactionLevels' => $satisfactionLevels
+            'prediksi' => $prediksi,
+            'ageGroupsData' => $ageGroupsData, // Pass aggregated data to the view
+            'samples' => $samples,
+            'labels' => $labels
         ]);
     }
 
-    // Helper function to map field names if needed
-    private function getSurveyField($level)
+    // Helper function untuk menentukan kelompok umur
+    private function getAgeGroup($age)
     {
-        // Map field names based on your data structure
-        return 'field_name_based_on_level_' . $level; // Adjust as needed
+        if ($age >= 20 && $age <= 35) {
+            return '20-35';
+        } elseif ($age >= 36 && $age <= 45) {
+            return '36-45';
+        } elseif ($age >= 46 && $age <= 60) {
+            return '46-60';
+        }
+
+        return null;
     }
 }
-
-?>

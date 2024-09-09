@@ -21,71 +21,79 @@
     </style>
 
     <div class="container">
-        <h3 class="my-4">Application Usage Satisfaction Levels</h3>
-    </div>
-    <div id="chart-container">
-        <canvas id="satisfactionChart"></canvas>
+        <h3 class="m-4">Analisis Kepuasan Pengguna Berdasarkan Umur</h3>
+
+        <div class="row">
+            @foreach ($ageGroupsData as $ageGroup => $data)
+                <div class="col-md-4">
+                    <h4>Kelompok Umur {{ $ageGroup }}</h4>
+                    <canvas id="satisfactionChart{{ str_replace('-', '_', $ageGroup) }}"></canvas>
+                </div>
+            @endforeach
+        </div>
     </div>
 
-    <!-- Load Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('satisfactionChart').getContext('2d');
-            console.log('Satisfaction Levels:', [
-                {{ $satisfactionLevels[1] ?? 0 }},
-                {{ $satisfactionLevels[2] ?? 0 }},
-                {{ $satisfactionLevels[3] ?? 0 }},
-                {{ $satisfactionLevels[4] ?? 0 }},
-                {{ $satisfactionLevels[5] ?? 0 }}
-            ]);
+            // Data yang diterima dari server
+            const ageGroupsData = @json($ageGroupsData);
 
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Tidak Puas (1)', 'Kurang Puas (2)', 'Cukup Puas (3)', 'Puas (4)',
-                        'Sangat Puas (5)'
-                    ],
-                    datasets: [{
-                        label: 'Banyak pengguna yang memilih',
-                        data: [
-                            {{ $satisfactionLevels[1] ?? 0 }},
-                            {{ $satisfactionLevels[2] ?? 0 }},
-                            {{ $satisfactionLevels[3] ?? 0 }},
-                            {{ $satisfactionLevels[4] ?? 0 }},
-                            {{ $satisfactionLevels[5] ?? 0 }}
-                        ],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)' // Tambahkan warna untuk level 5
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)' // Tambahkan warna border untuk level 5
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
+            // Fungsi untuk menghitung frekuensi setiap nilai kepuasan
+            function countSatisfactionLevels(surveyData) {
+                return surveyData; // Data sudah dalam format yang diperlukan
+            }
+
+            Object.keys(ageGroupsData).forEach(ageGroup => {
+                const ctx = document.getElementById('satisfactionChart' + ageGroup.replace('-', '_'))
+                    .getContext('2d');
+                if (ctx) {
+                    const data = countSatisfactionLevels(ageGroupsData[ageGroup]);
+                    new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Tidak Puas', 'Kurang Puas', 'Cukup Puas',
+                                'Puas', 'Sangat Puas'
+                            ],
+                            datasets: [{
+                                label: 'Banyak pengguna yang memilih',
+                                data: data,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
                         },
-                        tooltip: {
-                            enabled: true,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                }
+                            }
                         }
-                    }
+                    });
+                } else {
+                    console.error(
+                        `Canvas element with id 'satisfactionChart${ageGroup.replace('-', '_')}' not found.`
+                    );
                 }
             });
         });
     </script>
-
 
 @endsection
