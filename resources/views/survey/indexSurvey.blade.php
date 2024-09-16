@@ -52,18 +52,18 @@
                     new Chart(ctx, {
                         type: 'pie',
                         data: {
-                            labels: ['Tidak Puas', 'Kurang Puas', 'Cukup Puas',
-                                'Puas', 'Sangat Puas'
+                            labels: ['Sangat Tidak Setuju', 'Tidak Setuju', 'Netral', 'Setuju',
+                                'Sangat Setuju'
                             ],
                             datasets: [{
                                 label: 'Banyak pengguna yang memilih',
                                 data: data,
                                 backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)'
+                                    'rgba(255, 99, 132, 0.2)', // Sangat Tidak Setuju
+                                    'rgba(54, 162, 235, 0.2)', // Tidak Setuju
+                                    'rgba(255, 206, 86, 0.2)', // Netral
+                                    'rgba(75, 192, 192, 0.2)', // Setuju
+                                    'rgba(153, 102, 255, 0.2)' // Sangat Setuju
                                 ],
                                 borderColor: [
                                     'rgba(255, 99, 132, 1)',
@@ -95,5 +95,6 @@
             });
         });
     </script>
+
 
 @endsection

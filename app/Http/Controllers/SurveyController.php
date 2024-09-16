@@ -25,24 +25,43 @@ class SurveyController extends Controller
 
         // Tentukan nama field survei yang relevan
         $surveyFields = [
-            'ease_of_use',
-            'interface_intuitiveness',
-            'responsiveness',
-            'feature_completeness',
-            'feature_suitability',
-            'stability',
-            'ui_design',
-            'customer_support',
-            'security_and_privacy'
+            'informasi_lengkap',
+            'konten_berkualitas',
+            'konten_bermanfaat',
+            'informasi_akurat',
+            'standar_kinerja',
+            'informasi_dipercaya',
+            'format_menarik',
+            'tampilan_jelas',
+            'output_berkualitas',
+            'format_mudah',
+            'user_friendly',
+            'nyaman_digunakan',
+            'kemudahan_interaksi',
+            'informasi_dibutuhkan',
+            'informasi_siapsaji',
+            'akses_cepat',
+            'unggahan_cepat',
+            'akses_aman',
+            'keamanan_data',
+            'data_terjamin',
+            'memenuhi_kebutuhan',
+            'bekerja_efisien',
+            'bekerja_efektif',
+            'kepuasan_keseluruhan'
         ];
 
         // Ambil data dan label dari survei
         foreach ($surveys as $survey) {
-            $age = $survey->age; // Asumsi field umur adalah 'age'
+            $age = $survey->usia; // Asumsi field umur adalah 'usia'
             $ageGroup = $this->getAgeGroup($age);
 
             if ($ageGroup) {
                 $sample = [];
+
+                // Masukkan kepuasan_pengguna (1-5 skala) di awal
+                $sample[] = $survey->kepuasan_pengguna;
+
                 foreach ($surveyFields as $field) {
                     $sample[] = $survey[$field] ?? 0; // Tambahkan nilai survei ke sample
                 }
@@ -65,12 +84,12 @@ class SurveyController extends Controller
         // Buat dataset
         $dataset = new ArrayDataset($samples, $labels);
 
-        // Inisialisasi dan train KNearestNeighbors Classifier
+        // Inisialisasi dan train KNearestNeighbors Classifier (atau algoritma lain yang diinginkan)
         $classifier = new KNearestNeighbors();
         $classifier->train($dataset->getSamples(), $dataset->getTargets());
 
         // Prediksi kelompok umur untuk data survei baru (contoh)
-        $newSurvey = [5, 4, 4, 5, 5, 4, 5, 4, 5]; // Contoh data survei baru
+        $newSurvey = [5, 5, 4, 4, 5, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4]; // 25 elemen, dengan elemen pertama sebagai kepuasan_pengguna
         $predictedAgeGroup = $classifier->predict($newSurvey);
 
         // Hasil prediksi
@@ -100,4 +119,5 @@ class SurveyController extends Controller
 
         return null;
     }
+
 }
