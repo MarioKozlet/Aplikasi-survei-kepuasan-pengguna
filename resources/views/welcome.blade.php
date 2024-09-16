@@ -77,17 +77,17 @@
         </div>
     </nav>
 
-
-
     <!-- Survey Form -->
     <div class="container mt-5">
         <h2 class="text-center">Survei Kepuasan Pengguna</h2>
         <p class="text-center">Kami menghargai umpan balik Anda untuk membantu kami meningkatkan aplikasi kami.</p>
         <form action="{{ route('welcome.save') }}" method="POST">
+
             @csrf
+
             <div class="mb-3">
-                <label for="username" class="form-label">Nama</label>
-                <input type="text" class="form-control shadow-sm" id="name" name="name" placeholder="Enter your name">
+                <label for="name" class="form-label">Nama</label>
+                <input type="text" class="form-control shadow-sm" id="name" name="name" placeholder="Masukan nama anda">
             </div>
 
             <div class="mb-3">
@@ -100,6 +100,11 @@
                     <input type="radio" class="form-check-input shadow-sm" id="p" name="jk" value="P">
                     <label for="p" class="form-check-label">Perempuan</label>
                 </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="umur" class="form-label">Umur</label>
+                <input type="number" class="form-control shadow-sm" id="umur" name="umur" placeholder="Masukan umur anda">
             </div>
 
             <div class="mb-3">
@@ -131,8 +136,47 @@
             </div>
 
             <div class="mb-3">
-                <label for="alamat" class="form-check-lable">Alamat</label>
-                <textarea class="form-control" name="alamat" id="alamat" cols="5" rows="3"></textarea>
+                <label class="form-check-label">Alamat :</label>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat1" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat1">Abeli</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat2" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat2">Baruga</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat3" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat3">Kadia</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat4" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat4">Kambu</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat5" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat5">Kendari Barat</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat6" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat6">Mandonga</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat6" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat6">Nambo</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat6" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat6">Poasia</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat6" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat6">Puuwatu</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="alamat" id="alamat6" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="alamat6">Wua-wua</label>
+                </div>
             </div>
 
             <div class="mb-3">
