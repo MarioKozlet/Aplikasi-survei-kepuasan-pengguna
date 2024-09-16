@@ -106,27 +106,27 @@
                 <label class="form-check-label">Pekerjaan :</label>
                 <div class="form-check">
                     <input type="radio" name="pekerjaan" id="pekerjaan1" class="form-check-input shadow-sm">
-                    <label class="form-check-label" for="pekerjaan1">Pekerjaan 1</label>
+                    <label class="form-check-label" for="pekerjaan1">Pegawai Negeri Sipil (PNS)</label>
                 </div>
                 <div class="form-check">
                     <input type="radio" name="pekerjaan" id="pekerjaan2" class="form-check-input shadow-sm">
-                    <label class="form-check-label" for="pekerjaan2">Pekerjaan 2</label>
+                    <label class="form-check-label" for="pekerjaan2">Karyawaan Swasta</label>
                 </div>
                 <div class="form-check">
                     <input type="radio" name="pekerjaan" id="pekerjaan3" class="form-check-input shadow-sm">
-                    <label class="form-check-label" for="pekerjaan3">Pekerjaan 3</label>
+                    <label class="form-check-label" for="pekerjaan3">Wirausaha</label>
                 </div>
                 <div class="form-check">
                     <input type="radio" name="pekerjaan" id="pekerjaan4" class="form-check-input shadow-sm">
-                    <label class="form-check-label" for="pekerjaan4">Pekerjaan 4</label>
+                    <label class="form-check-label" for="pekerjaan4">IRT</label>
                 </div>
                 <div class="form-check">
                     <input type="radio" name="pekerjaan" id="pekerjaan5" class="form-check-input shadow-sm">
-                    <label class="form-check-label" for="pekerjaan5">Pekerjaan 5</label>
+                    <label class="form-check-label" for="pekerjaan5">Tenaga Kesehatan</label>
                 </div>
                 <div class="form-check">
                     <input type="radio" name="pekerjaan" id="pekerjaan6" class="form-check-input shadow-sm">
-                    <label class="form-check-label" for="pekerjaan6">Pekerjaan 6</label>
+                    <label class="form-check-label" for="pekerjaan6">THL (Tenaga Lepas Harian)</label>
                 </div>
             </div>
 
@@ -157,26 +157,41 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-check-label">Apakah anda merasa puas saat menggunakan aplikasi Sentuh Tanahku?</label>
+                <div class="form-check">
+                    <input type="radio" name="puas" id="puas1" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="puas1">Sangat Puas</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="puas" id="puas2" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="puas2">Puas</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="puas" id="puas3" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="puas3">Cukup Puas</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="puas" id="puas4" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="puas4">Kurang Puas</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="pekerjaan" id="pekerjaan5" class="form-check-input shadow-sm">
+                    <label class="form-check-label" for="pekerjaan5">Tidak Puas</label>
+                </div>
+            </div>
+
+            <div class="mb-3">
                 <table class="table table-borderd bg-white shadow-sm">
                             <tbody>
                                 <tr>
                                     <th scope="row"> </th>
-                                    <td class="text-center">Sangat Puas</td>
-                                    <td class="text-center">Puas</td>
-                                    <td class="text-center">Cukup Puas</td>
-                                    <td class="text-center">Kurang Puas</td>
-                                    <td class="text-center">Tidak Puas</td>
+                                    <td class="text-center">Sangat Tidak Setuju</td>
+                                    <td class="text-center">Tidak Setuju</td>
+                                    <td class="text-center">Netral</td>
+                                    <td class="text-center">Setuju</td>
+                                    <td class="text-center">Sangat Setuju</td>
                                 </tr>
                                 <form action="{{ route('welcome.save') }}" method="post">
-                                    <tr>
-                                        <th scope="row">Apakah anda merasa puas saat menggunakan aplikasi Sentuh Tanahku?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-
                                     <tr>
                                         <th scope="row" colspan="8"><b>Content</b></th>
                                     </tr>
