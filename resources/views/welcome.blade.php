@@ -80,116 +80,123 @@
 
 
     <!-- Survey Form -->
-    <div class="container mt-5">
-        <h2 class="text-center">Survei Kepuasan Pengguna</h2>
-        <p class="text-center">Kami menghargai umpan balik Anda untuk membantu kami meningkatkan aplikasi kami.</p>
-        <form action="{{ route('welcome.save') }}" method="POST">
-            @csrf
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Enter your email">
+    <div class="container m-5">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">Survei Kepuasan Pengguna</h2>
+                <p class="text-center">Kami menghargai umpan balik Anda untuk membantu kami meningkatkan aplikasi kami.</p>
             </div>
-            <div class="mb-3">
-                <label for="username" class="form-label">Name</label>
-                <input type="text" class="form-control shadow-sm" id="name" name="name" placeholder="Enter your name">
+
+            <div class="card-body">
+                <form action="{{ route('welcome.save') }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Masukan email anda">
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nama</label>
+                        <input type="text" class="form-control shadow-sm" id="name" name="name" placeholder="Masukan nama anda">
+                    </div>
+                    <div class="mb-3">
+                        <label for="umur" class="form-label">Umur</label>
+                        <input type="text" class="form-control shadow-sm" id="umur" name="umur" placeholder="Masukan umur anda">
+                    </div>
+                    <div class="mb-3">
+                        <table class="table table-bordered shadow-sm">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row"> </th>
+                                            <td class="text-center">Sangat Puas</td>
+                                            <td class="text-center">Puas</td>
+                                            <td class="text-center">Cukup Puas</td>
+                                            <td class="text-center">Kurang Puas</td>
+                                            <td class="text-center">Tidak Puas</td>
+                                        </tr>
+                                        <form action="{{ route('welcome.save') }}" method="post">
+                                            <tr>
+                                                <th scope="row">Seberapa puas Anda dengan kemudahan penggunaan aplikasi sentuh tanah?</th>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="1"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="2"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="3"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="4"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Seberapa intuitif antarmuka pengguna aplikasi sentuh tanah?</th>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="interface_intuitiveness" value="1"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="interface_intuitiveness" value="2"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="interface_intuitiveness" value="3"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="interface_intuitiveness" value="4"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Apakah aplikasi sentuh tanah responsif saat digunakan?</th>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="responsiveness" value="1"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="responsiveness" value="2"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="responsiveness" value="3"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="responsiveness" value="4"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Seberapa puas Anda dengan kelengkapan fitur yang tersedia di sentuh tanah?</th>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="feature_completeness" value="1"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="feature_completeness" value="2"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="feature_completeness" value="3"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="feature_completeness" value="4"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Apakah fitur aplikasi sentuh tanah sesuai kebutuhan Anda?</th>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="feature_suitability" value="1"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="feature_suitability" value="2"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="feature_suitability" value="3"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="feature_suitability" value="4"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Seberapa puas Anda dengan stabilitas sentuh tanah <small>(tval1ueak ada crash/error)</small>?</th>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="stability" value="1"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="stability" value="2"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="stability" value="3"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="stability" value="4"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Seberapa puas Anda dengan tampilan dan desain antarmuka aplikasi sentuh tanah?</th>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ui_design" value="1"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ui_design" value="2"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ui_design" value="3"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ui_design" value="4"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Seberapa puas Anda dengan layanan dukungan pelanggan aplikasi sentuh tanah?</th>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="customer_support" value="1"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="customer_support" value="2"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="customer_support" value="3"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="customer_support" value="4"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Seberapa puas Anda dengan tingkat keamanan dan privasi yang ditawarkan?</th>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="security_and_privacy" value="1"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="security_and_privacy" value="2"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="security_and_privacy" value="3"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="security_and_privacy" value="4"></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
+                                            </tr>
+                                        </form>
+                                    </tbody>
+                        </table>
+                    </div>
+                </form>
             </div>
-            <div class="mb-3">
-                <table class="table table-striped bg-white shadow-sm">
-                            <tbody>
-                                <tr>
-                                    <th scope="row"> </th>
-                                    <td class="text-center">Sangat Puas</td>
-                                    <td class="text-center">Puas</td>
-                                    <td class="text-center">Cukup Puas</td>
-                                    <td class="text-center">Kurang Puas</td>
-                                    <td class="text-center">Tidak Puas</td>
-                                </tr>
-                                <form action="{{ route('welcome.save') }}" method="post">
-                                    <tr>
-                                        <th scope="row">Seberapa puas Anda dengan kemudahan penggunaan aplikasi sentuh tanah?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Seberapa intuitif antarmuka pengguna aplikasi sentuh tanah?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="interface_intuitiveness" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="interface_intuitiveness" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="interface_intuitiveness" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="interface_intuitiveness" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Apakah aplikasi sentuh tanah responsif saat digunakan?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="responsiveness" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="responsiveness" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="responsiveness" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="responsiveness" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Seberapa puas Anda dengan kelengkapan fitur yang tersedia di sentuh tanah?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="feature_completeness" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="feature_completeness" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="feature_completeness" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="feature_completeness" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Apakah fitur aplikasi sentuh tanah sesuai kebutuhan Anda?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="feature_suitability" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="feature_suitability" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="feature_suitability" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="feature_suitability" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Seberapa puas Anda dengan stabilitas sentuh tanah <small>(tval1ueak ada crash/error)</small>?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="stability" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="stability" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="stability" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="stability" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Seberapa puas Anda dengan tampilan dan desain antarmuka aplikasi sentuh tanah?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ui_design" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ui_design" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ui_design" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ui_design" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Seberapa puas Anda dengan layanan dukungan pelanggan aplikasi sentuh tanah?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="customer_support" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="customer_support" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="customer_support" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="customer_support" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Seberapa puas Anda dengan tingkat keamanan dan privasi yang ditawarkan?</th>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="security_and_privacy" value="1"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="security_and_privacy" value="2"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="security_and_privacy" value="3"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="security_and_privacy" value="4"></td>
-                                        <td class="text-center"><input class="form-check-input" type="radio" name="ease_of_use" value="5"></td>
-                                    </tr>
-                                </form>
-                            </tbody>
-                </table>
-            </div>
-            <div class="mb-3">
-                <label for="feedback" class="form-label">Additional Comments</label>
-                <textarea class="form-control shadow-sm" id="feedback" name="additional_feedback" rows="3"
-                    placeholder="Bagikan pendapat Anda..."></textarea>
-            </div>
-            <div class="mb-3 text-center">
+
+            <div class="card-footer text-center">
                 <button type="submit" class="btn btn-primary shadow">Submit Feedback</button>
             </div>
-        </form>
+        </div>
     </div>
 
     <!-- Core JS -->
