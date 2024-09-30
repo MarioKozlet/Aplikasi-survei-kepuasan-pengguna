@@ -6,7 +6,8 @@
 
     <style>
         /* CSS untuk mengecilkan ukuran canvas */
-        #satisfactionChart {
+        #satisfactionChart,
+        #lineChart {
             max-width: 50%;
             height: auto;
         }
@@ -30,31 +31,37 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Grafik Rata-rata Kepuasan Pengguna (Line Chart)</h4>
+                <canvas id="lineChart"></canvas> <!-- Canvas untuk Line Chart -->
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Data yang diterima dari server
-            const ageGroupsSatisfaction = @json($ageGroupsSatisfaction);
+            const ageLabels = @json($ageLabels);
+            const ageData = @json($ageData);
 
-            // Buat dataset rata-rata kepuasan untuk setiap kelompok umur
-            const labels = Object.keys(ageGroupsSatisfaction);
-            const data = labels.map(ageGroup => ageGroupsSatisfaction[ageGroup].average_satisfaction);
+            const surveyLabel = @json($satisfactionLabels); // Perbaiki di sini
+            const surveyData = @json($satisfactionData); // Perbaiki di sini
 
-            // Konfigurasi chart
-            const ctx = document.getElementById('satisfactionChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar', // Menggunakan bar chart untuk menampilkan rata-rata kepuasan
+            // Konfigurasi Bar chart (rata-rata kepuasan berdasarkan kelompok umur)
+            const ctxBar = document.getElementById('satisfactionChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
                 data: {
-                    labels: labels, // Kelompok umur (20-35, 36-45, 46-60)
+                    labels: ageLabels,
                     datasets: [{
                         label: 'Rata-rata Kepuasan Pengguna',
-                        data: data, // Nilai rata-rata kepuasan per kelompok umur
+                        data: ageData,
                         backgroundColor: [
-                            'rgba(75, 192, 192, 0.2)', // Warna batang 1
-                            'rgba(153, 102, 255, 0.2)', // Warna batang 2
-                            'rgba(255, 159, 64, 0.2)' // Warna batang 3
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
                         ],
                         borderColor: [
                             'rgba(75, 192, 192, 1)',
@@ -96,9 +103,59 @@
                     responsive: true,
                 }
             });
+
+            // Konfigurasi Line chart untuk rata-rata kepuasan setiap kelompok umur
+            const ctxLine = document.getElementById('lineChart').getContext('2d');
+            new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: surveyLabel,
+                    datasets: [{
+                        label: 'Rata-rata Kepuasan',
+                        data: surveyData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Rata-rata Skor Kepuasan (1-5)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Kelompok Umur'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true
+                        },
+                        tooltip: {
+                            enabled: true,
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const value = tooltipItem.raw; // Ambil nilai dari tooltipItem
+                                    return 'Rata-rata Kepuasan: ' + (value !== undefined ? value
+                                        .toFixed(2) : 'N/A');
+                                }
+                            }
+                        }
+                    },
+                    responsive: true,
+                }
+            });
+
         });
     </script>
-
 
 
 @endsection
