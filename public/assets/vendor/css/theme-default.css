@@ -296,27 +296,27 @@ button.list-group-item-primary.active {
 }
 
 .nav .nav-link:hover, .nav .nav-link:focus {
-  color: #5f61e6;
+  color: #fff;
 }
 
 .nav-pills .nav-link.active, .nav-pills .nav-link.active:hover, .nav-pills .nav-link.active:focus {
-  background-color: #696cff;
+  background-color: #abba5e;
   color: #fff;
-  box-shadow: 0 2px 4px 0 rgba(105, 108, 255, 0.4);
+  box-shadow: 0 2px 4px 0 #484e2c;
 }
 
 .form-control:focus,
 .form-select:focus {
-  border-color: #696cff;
+  border-color: #828C51;
 }
 
 .input-group:focus-within .form-control,
 .input-group:focus-within .input-group-text {
-  border-color: #696cff;
+  border-color: #828C51;
 }
 
 .form-check-input:focus {
-  border-color: #696cff;
+  border-color: #828C51;
   box-shadow: 0 2px 4px 0 rgba(105, 108, 255, 0.4);
 }
 .form-check-input:disabled {
@@ -446,7 +446,7 @@ button.list-group-item-primary.active {
   color: #fff;
 }
 .menu.bg-primary .menu-item.active > .menu-link:not(.menu-toggle) {
-  background-color: #6d70ff;
+  background-color: #828C51;
 }
 .menu.bg-primary.menu-horizontal .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle) {
   background-color: #7174ff;

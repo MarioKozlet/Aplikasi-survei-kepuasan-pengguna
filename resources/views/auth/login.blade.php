@@ -62,7 +62,7 @@
 
     <div class="container-xxl">
       <div class="authentication-wrapper authentication-basic container-p-y">
-        <div class="authentication-inner">
+        {{-- <div class="authentication-inner"> --}}
           <!-- Register -->
           <div class="card">
             <div class="card-body">
@@ -74,7 +74,7 @@
               </div>
               <!-- /Logo -->
               <h4 class="mb-2">Welcome! 👋</h4>
-              <p class="mb-4">Please sign-in to your account and start the adventure</p>
+              <p class="mb-4">Tolong masukan data akun anda untuk melaukan login</p>
 
               <form id="formAuthentication" class="mb-3" action="{{ route('auth.login') }}" method="POST">
                 @csrf
@@ -106,13 +106,13 @@
                   </div>
                 </div>
                 <div class="mb-3">
-                  <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                  <button style="background-color: #828C51; color: white;" class="btn d-grid w-100" type="submit">Sign in</button>
                 </div>
               </form>
             </div>
           </div>
           <!-- /Register -->
-        </div>
+        {{-- </div> --}}
       </div>
     </div>
 
