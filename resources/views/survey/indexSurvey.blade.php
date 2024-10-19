@@ -30,26 +30,27 @@
                 <canvas id="satisfactionChart"></canvas>
             </div>
         </div>
-
+        <br>
         <div class="row">
             <div class="col-md-12">
-                <h4>Grafik Rata-rata Kepuasan Pengguna (Line Chart)</h4>
-                <canvas id="lineChart"></canvas> <!-- Canvas untuk Line Chart -->
+                <h4>Grafik Status Kepuasan Pengguna</h4>
+                <canvas id="lineChart"></canvas> <!-- Canvas for Line Chart -->
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Ensure ChartDataLabels is registered
+            Chart.register(ChartDataLabels);
+
             // Data yang diterima dari server
             const ageLabels = @json($ageLabels);
             const ageData = @json($ageData);
 
-            const surveyLabel = @json($satisfactionLabels); // Perbaiki di sini
-            const surveyData = @json($satisfactionData); // Perbaiki di sini
-
-            // Konfigurasi Bar chart (rata-rata kepuasan berdasarkan kelompok umur)
+            // Render the satisfactionChart
             const ctxBar = document.getElementById('satisfactionChart').getContext('2d');
             new Chart(ctxBar, {
                 type: 'bar',
@@ -100,62 +101,79 @@
                             }
                         }
                     },
-                    responsive: true,
+                    responsive: true
                 }
             });
 
-            // Konfigurasi Line chart untuk rata-rata kepuasan setiap kelompok umur
+            // Render the lineChart with texts in bars
             const ctxLine = document.getElementById('lineChart').getContext('2d');
             new Chart(ctxLine, {
-                type: 'line',
+                type: 'bar',
                 data: {
-                    labels: surveyLabel,
+                    labels: ['Sangat Puas', 'Puas', 'Cukup Puas', 'Kurang Puas', 'Tidak Puas'],
                     datasets: [{
-                        label: 'Rata-rata Kepuasan',
-                        data: surveyData,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        fill: false,
+                        label: 'Persentase Jawaban',
+                        data: [
+                            {{ $percentageResponses['SP'] }},
+                            {{ $percentageResponses['P'] }},
+                            {{ $percentageResponses['CP'] }},
+                            {{ $percentageResponses['KP'] }},
+                            {{ $percentageResponses['TP'] }}
+                        ],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 99, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Rata-rata Skor Kepuasan (1-5)'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Kelompok Umur'
-                            }
+                            display: false
                         }
                     },
                     plugins: {
-                        legend: {
-                            display: true
-                        },
                         tooltip: {
-                            enabled: true,
                             callbacks: {
-                                label: function(tooltipItem) {
-                                    const value = tooltipItem.raw; // Ambil nilai dari tooltipItem
-                                    return 'Rata-rata Kepuasan: ' + (value !== undefined ? value
-                                        .toFixed(2) : 'N/A');
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.raw.toFixed(2) + '%';
+                                    return label;
                                 }
+                            }
+                        },
+                        datalabels: {
+                            display: true,
+                            align: 'center',
+                            anchor: 'center',
+                            color: 'black',
+                            font: {
+                                weight: 'bold',
+                                size: 12
+                            },
+                            formatter: function(value) {
+                                return value.toFixed(2) + '%';
                             }
                         }
                     },
-                    responsive: true,
+                    responsive: true
                 }
             });
-
         });
     </script>
-
 
 @endsection

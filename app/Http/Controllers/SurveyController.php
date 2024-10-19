@@ -20,42 +20,29 @@ class SurveyController extends Controller
             '46-60' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
         ];
 
-        // Inisialisasi array untuk menyimpan data kepuasan berdasarkan setiap field
-        $satisfactionGroups = [
-            'kepuasan_pengguna' => ['total_score' => 0, 'total_count' => 0],
-            'informasi_lengkap' => ['total_score' => 0, 'total_count' => 0],
-            'konten_berkualitas' => ['total_score' => 0, 'total_count' => 0],
-            'konten_bermanfaat' => ['total_score' => 0, 'total_count' => 0],
-            'informasi_akurat' => ['total_score' => 0, 'total_count' => 0],
-            'standar_kinerja' => ['total_score' => 0, 'total_count' => 0],
-            'informasi_dipercaya' => ['total_score' => 0, 'total_count' => 0],
-            'format_menarik' => ['total_score' => 0, 'total_count' => 0],
-            'tampilan_jelas' => ['total_score' => 0, 'total_count' => 0],
-            'output_berkualitas' => ['total_score' => 0, 'total_count' => 0],
-            'format_mudah' => ['total_score' => 0, 'total_count' => 0],
-            'user_friendly' => ['total_score' => 0, 'total_count' => 0],
-            'nyaman_digunakan' => ['total_score' => 0, 'total_count' => 0],
-            'kemudahan_interaksi' => ['total_score' => 0, 'total_count' => 0],
-            'informasi_dibutuhkan' => ['total_score' => 0, 'total_count' => 0],
-            'informasi_siapsaji' => ['total_score' => 0, 'total_count' => 0],
-            'akses_cepat' => ['total_score' => 0, 'total_count' => 0],
-            'unggahan_cepat' => ['total_score' => 0, 'total_count' => 0],
-            'akses_aman' => ['total_score' => 0, 'total_count' => 0],
-            'keamanan_data' => ['total_score' => 0, 'total_count' => 0],
-            'data_terjamin' => ['total_score' => 0, 'total_count' => 0],
-            'memenuhi_kebutuhan' => ['total_score' => 0, 'total_count' => 0],
-            'bekerja_efisien' => ['total_score' => 0, 'total_count' => 0],
-            'bekerja_efektif' => ['total_score' => 0, 'total_count' => 0],
-            'kepuasan_keseluruhan' => ['total_score' => 0, 'total_count' => 0],
-        ];
-
-        // Peta untuk konversi dari jawaban ke nilai
         $satisfactionScale = [
             'STS' => 1,
             'TS' => 2,
             'N' => 3,
             'S' => 4,
             'SS' => 5,
+        ];
+
+        $satisfactionScaleLine = [
+            1 => 'SP',
+            2 => 'P',
+            3 => 'CP',
+            4 => 'KP',
+            5 => 'TP',
+        ];
+
+        // Data total untuk setiap jawaban STS, TS, N, S, SS
+        $totalResponses = [
+            'SP' => 0,
+            'P' => 0,
+            'CP' => 0,
+            'KP' => 0,
+            'TP' => 0,
         ];
 
         // Ambil data dan hitung kepuasan
@@ -81,35 +68,32 @@ class SurveyController extends Controller
                 $ageGroupsSatisfaction[$ageGroup]['total_score'] += $score;
                 $ageGroupsSatisfaction[$ageGroup]['total_count']++;
             }
+        }
+        // Jumlah total semua jawaban
+        $totalSurveyCount = 0;
 
-            // Update data untuk pengelompokan kepuasan
-            foreach ($satisfactionGroups as $field => &$data) {
-                if (isset($survey->$field)) {
-                    $value = (int)$survey->$field; // Hapus spasi di awal dan akhir
+        // Nama field yang ada di database
+        $fields = [
+            'kepuasan_pengguna'
+        ];
 
-                    // Cek apakah $value ada dalam $satisfactionScale
-                    if (in_array($value, $satisfactionScale, true)) {
-                        // Temukan key dari satisfactionScale yang sesuai dengan $value
-                        $scoreKey = array_search($value, $satisfactionScale, true); // Cari key berdasarkan value
-                        
-                        if ($scoreKey !== false) {
-                            $score = $satisfactionScale[$scoreKey]; // Ambil skor
-                            $data['total_score'] += $score;
-                            $data['total_count']++;
-                        }
-                    }
+        // Proses data survei untuk menghitung total jawaban
+        foreach ($surveys as $survey) {
+            foreach ($fields as $field) {
+                $answer = $survey->$field; // $answer adalah angka (1, 2, 3, 4, 5)
+                if (isset($satisfactionScaleLine[$answer])) {
+                    $responseLabel = $satisfactionScaleLine[$answer]; // Konversi angka menjadi STS, TS, N, S, SS
+                    // Tambahkan ke total jawaban untuk kategori yang sesuai (STS, TS, N, S, SS)
+                    $totalResponses[$responseLabel]++;
+                    $totalSurveyCount++;
                 }
             }
         }
 
-        // Hitung rata-rata kepuasan berdasarkan setiap field
-        foreach ($satisfactionGroups as $key => &$data) {
-            if ($data['total_count'] > 0) {
-                $data['average_satisfaction'] = $data['total_score'] / $data['total_count'];
-            } else {
-                $data['average_satisfaction'] = 0; // Jika tidak ada data
-            }
-        }
+        // Hitung persentase untuk setiap jawaban
+        $percentageResponses = array_map(function ($count) use ($totalSurveyCount) {
+            return ($totalSurveyCount > 0) ? ($count / $totalSurveyCount) * 100 : 0;
+        }, $totalResponses);
 
         foreach ($ageGroupsSatisfaction as $ageGroup => &$group) {
             if ($group['total_count'] > 0) {
@@ -123,9 +107,7 @@ class SurveyController extends Controller
         $ageLabels = array_keys($ageGroupsSatisfaction);
         $ageData = array_map(fn($group) => $group['average_satisfaction'], $ageGroupsSatisfaction);
 
-        $satisfactionLabels = array_keys($satisfactionGroups);
-        $satisfactionData = array_map(fn($group) => $group['average_satisfaction'], $satisfactionGroups);
-        return view('survey.indexSurvey', compact('ageLabels', 'ageData', 'satisfactionLabels', 'satisfactionData'));
+        return view('survey.indexSurvey', compact('ageLabels', 'ageData', 'percentageResponses'));
     }
 
     // Helper function untuk menentukan kelompok umur
