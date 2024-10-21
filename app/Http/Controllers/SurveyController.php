@@ -4,100 +4,105 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Survey;
-use Phpml\Classification\KNearestNeighbors;
-use Phpml\Dataset\ArrayDataset;
 
-class SurveyController extends Controller 
+class SurveyController extends Controller
 {
     public function indexSurvey()
     {
-        // Ambil semua data survei
-        $surveys = Survey::all();
+        // 1. Klasifikasi data (pengambilan data dari tabel Survey)
+        $scores = Survey::all(); 
+        $scoreSurvey = Survey::pluck('score'); 
 
-        // Inisialisasi array untuk menyimpan data dan target untuk algoritma
-        $samples = [];
-        $labels = [];
-        $ageGroupsData = [
-            '20-35' => [0, 0, 0, 0, 0],
-            '36-45' => [0, 0, 0, 0, 0],
-            '46-60' => [0, 0, 0, 0, 0],
+        // Total responden
+        $totalRespondents = $scoreSurvey->count();
+
+        // Hitung jumlah tiap kategori kepuasan
+        $count1 = $scores->where('score', 1)->count(); // Nilai 1 - Tidak puas
+        $count2 = $scores->where('score', 2)->count(); // Nilai 2 - Kurang puas
+        $count3 = $scores->where('score', 3)->count(); // Nilai 3 - Netral
+        $count4 = $scores->where('score', 4)->count(); // Nilai 4 - Cukup puas
+        $count5 = $scores->where('score', 5)->count(); // Nilai 5 - Sangat puas
+
+        // Hitung persentase setiap kategori
+        $percent1 = $totalRespondents > 0 ? ($count1 / $totalRespondents) * 100 : 0;
+        $percent2 = $totalRespondents > 0 ? ($count2 / $totalRespondents) * 100 : 0;
+        $percent3 = $totalRespondents > 0 ? ($count3 / $totalRespondents) * 100 : 0;
+        $percent4 = $totalRespondents > 0 ? ($count4 / $totalRespondents) * 100 : 0;
+        $percent5 = $totalRespondents > 0 ? ($count5 / $totalRespondents) * 100 : 0;
+
+        // 2. Konversi bobot ke dalam bobot AHP
+        $totalScores = $count1 + $count2 + $count3 + $count4 + $count5;
+        $weights = [
+            'tidak_puas' => $totalScores > 0 ? $count1 / $totalScores : 0,
+            'kurang_puas' => $totalScores > 0 ? $count2 / $totalScores : 0,
+            'netral' => $totalScores > 0 ? $count3 / $totalScores : 0,
+            'cukup_puas' => $totalScores > 0 ? $count4 / $totalScores : 0,
+            'sangat_puas' => $totalScores > 0 ? $count5 / $totalScores : 0,
         ];
 
-        // Tentukan nama field survei yang relevan
-        $surveyFields = [
-            'ease_of_use',
-            'interface_intuitiveness',
-            'responsiveness',
-            'feature_completeness',
-            'feature_suitability',
-            'stability',
-            'ui_design',
-            'customer_support',
-            'security_and_privacy'
+        // 3. Matriks perbandingan antar kriteria (contoh matriks AHP sederhana)
+        $comparisonMatrix = [
+            [1, 3, 0.5, 0.25, 0.2],    // Kriteria 1 vs Kriteria lainnya
+            [0.33, 1, 2, 0.5, 0.33],   // Kriteria 2 vs Kriteria lainnya
+            [2, 0.5, 1, 0.33, 0.25],   // Kriteria 3 vs Kriteria lainnya
+            [4, 2, 3, 1, 0.5],         // Kriteria 4 vs Kriteria lainnya
+            [5, 3, 4, 2, 1]            // Kriteria 5 vs Kriteria lainnya
         ];
 
-        // Ambil data dan label dari survei
-        foreach ($surveys as $survey) {
-            $age = $survey->age; // Asumsi field umur adalah 'age'
-            $ageGroup = $this->getAgeGroup($age);
+        // 4. Perhitungan metode AHP (CI, CR)
+        $CI = $this->calculateCI($comparisonMatrix);
+        $CR = $this->calculateCR($CI, count($comparisonMatrix));
 
-            if ($ageGroup) {
-                $sample = [];
-                foreach ($surveyFields as $field) {
-                    $sample[] = $survey[$field] ?? 0; // Tambahkan nilai survei ke sample
-                }
-
-                $samples[] = $sample; // Tambahkan sample ke array samples
-                $labels[] = $ageGroup; // Tambahkan kelompok umur sebagai label
-
-                // Update ageGroupsData
-                foreach ($surveyFields as $index => $field) {
-                    if (isset($survey[$field])) {
-                        $value = $survey[$field];
-                        if ($value >= 1 && $value <= 5) {
-                            $ageGroupsData[$ageGroup][$value - 1]++;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Buat dataset
-        $dataset = new ArrayDataset($samples, $labels);
-
-        // Inisialisasi dan train KNearestNeighbors Classifier
-        $classifier = new KNearestNeighbors();
-        $classifier->train($dataset->getSamples(), $dataset->getTargets());
-
-        // Prediksi kelompok umur untuk data survei baru (contoh)
-        $newSurvey = [5, 4, 4, 5, 5, 4, 5, 4, 5]; // Contoh data survei baru
-        $predictedAgeGroup = $classifier->predict($newSurvey);
-
-        // Hasil prediksi
-        $prediksi = [
-            'survey' => $newSurvey,
-            'predicted_age_group' => $predictedAgeGroup
-        ];
-
+        // 5. Penyusunan Hasil Penelitian
         return view('survey.indexSurvey', [
-            'prediksi' => $prediksi,
-            'ageGroupsData' => $ageGroupsData, // Pass aggregated data to the view
-            'samples' => $samples,
-            'labels' => $labels
+            'totalRespondents' => $totalRespondents,
+            'percent1' => $percent1,
+            'percent2' => $percent2,
+            'percent3' => $percent3,
+            'percent4' => $percent4,
+            'percent5' => $percent5,
+            'weights' => $weights,
+            'CI' => $CI,
+            'CR' => $CR
         ]);
     }
 
-    // Helper function untuk menentukan kelompok umur
-    private function getAgeGroup($age)
+    // Fungsi untuk menghitung CI (Consistency Index)
+    private function calculateCI($matrix)
     {
-        if ($age >= 20 && $age <= 35) {
-            return '20-35';
-        } elseif ($age >= 36 && $age <= 45) {
-            return '36-45';
-        } elseif ($age >= 46 && $age <= 60) {
-            return '46-60';
-        }
+        $lambdaMax = $this->calculateLambdaMax($matrix);
+        $n = count($matrix);  // Jumlah kriteria
+        return ($lambdaMax - $n) / ($n - 1);  // Rumus CI
+    }
 
-        return null;
+    // Fungsi untuk menghitung CR (Consistency Ratio)
+    private function calculateCR($CI, $n)
+    {
+        $RI = ['1' => 0, '2' => 0, '3' => 0.58, '4' => 0.9, '5' => 1.12];  // RI tergantung ukuran matriks
+        // dd($RI);
+        return $CI / $RI[$n];
+    }
+
+    // Fungsi untuk menghitung Lambda Maksimum (λmax)
+    private function calculateLambdaMax($matrix)
+    {
+        $columnSums = array_map(function ($colIndex) use ($matrix) {
+            return array_sum(array_column($matrix, $colIndex));
+        }, array_keys($matrix[0]));
+
+        $eigenvector = array_map(function ($row) use ($columnSums) {
+            return array_sum(array_map(function ($value, $colSum) {
+                return $value / $colSum;
+            }, $row, $columnSums)) / count($row);
+        }, $matrix);
+
+        $lambdaMax = array_sum(array_map(function ($row, $eigenValue) use ($matrix) {
+            return array_sum(array_map(function ($value) use ($eigenValue) {
+                return $value * $eigenValue;
+            }, $row));
+        }, $matrix, $eigenvector)) / count($eigenvector);
+
+        return $lambdaMax;
     }
 }
+
