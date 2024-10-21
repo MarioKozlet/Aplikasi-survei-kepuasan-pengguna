@@ -63,9 +63,11 @@ class SurveyController extends Controller
             'percent5' => $percent5,
             'weights' => $weights,
             'CI' => $CI,
-            'CR' => $CR
+            'CR' => $CR,
+            'comparisonMatrix' => $comparisonMatrix  // KIRIM comparisonMatrix KE VIEW
         ]);
     }
+
 
     // Fungsi untuk menghitung CI (Consistency Index)
     private function calculateCI($matrix)

@@ -11,8 +11,9 @@
     <p>Consistency Index (CI): {{ number_format($CI, 2) }}</p>
     <p>Consistency Ratio (CR): {{ number_format($CR, 2) }}</p>
 
+
     <!-- Chart untuk Persentase Kepuasan Pengguna -->
-    <div style="width: 50%; margin: auto;">
+    <div style="width: 50%; margin: auto; margin-top: 20px;">
         <canvas id="satisfactionChart"></canvas>
     </div>
 
@@ -21,6 +22,44 @@
         <canvas id="ciCrChart"></canvas>
     </div>
 
+    <!-- Tampilkan Matriks Perbandingan Kriteria (AHP) -->
+    <div class="m-4">
+        <h2>Matriks Perbandingan Kriteria (AHP)</h2>
+        <table class="table table-bordered table-light shadow-sm mt-3">
+            <thead class="table-light">
+                <tr>
+                    <th>Kriteria</th>
+                    <th>Tidak Puas</th>
+                    <th>Kurang Puas</th>
+                    <th>Netral</th>
+                    <th>Cukup Puas</th>
+                    <th>Sangat Puas</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($comparisonMatrix as $i => $row)
+                    <tr>
+                        <th>
+                            @if ($i == 0)
+                                Tidak Puas
+                            @elseif($i == 1)
+                                Kurang Puas
+                            @elseif($i == 2)
+                                Netral
+                            @elseif($i == 3)
+                                Cukup Puas
+                            @elseif($i == 4)
+                                Sangat Puas
+                            @endif
+                        </th>
+                        @foreach ($row as $value)
+                            <td>{{ number_format($value, 2) }}</td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     <!-- Chart untuk Perbandingan CI, CR, dan Persentase Kepuasan -->
     {{-- <div style="width: 50%; margin: auto; margin-top: 50px;">
         <canvas id="comparisonChart"></canvas>
@@ -109,68 +148,5 @@
                 }
             }
         });
-
-        // Chart untuk Perbandingan CI, CR, dan Persentase Kepuasan
-        var comparisonData = [
-            {{ number_format($CI, 2) }}, // CI
-            {{ number_format($CR, 2) }}, // CR
-            {{ $percent1 }},
-            {{ $percent2 }},
-            {{ $percent3 }},
-            {{ $percent4 }},
-            {{ $percent5 }}
-        ];
-
-        var comparisonLabels = [
-            'CI',
-            'CR',
-            'Tidak Puas',
-            'Kurang Puas',
-            'Netral',
-            'Cukup Puas',
-            'Sangat Puas'
-        ];
-
-        var ctxComparison = document.getElementById('comparisonChart').getContext('2d');
-        var comparisonChart = new Chart(ctxComparison, {
-            type: 'bar',
-            data: {
-                labels: comparisonLabels,
-                datasets: [{
-                    label: 'Perbandingan CI, CR, dan Persentase Kepuasan (%)',
-                    data: comparisonData,
-                    backgroundColor: [
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(255, 205, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100 // Karena persentase bisa mencapai 100%, CI dan CR tetap di bawah 1
-                    }
-                }
-            }
-        });
     </script>
-
-
 @endsection
