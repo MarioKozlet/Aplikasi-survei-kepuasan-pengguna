@@ -13,18 +13,10 @@ return new class extends Migration
     {
         Schema::create('surveys', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
             $table->string('name');
-            $table->integer('ease_of_use');
-            $table->integer('interface_intuitiveness');
-            $table->integer('responsiveness');
-            $table->integer('feature_completeness');
-            $table->integer('feature_suitability');
-            $table->integer('stability');
-            $table->integer('ui_design');
-            $table->integer('customer_support');
-            $table->integer('security_and_privacy');
-            $table->string('additional_feedback')->nullable();
+            $table->integer('score');
+            $table->timestamp('date');
+            $table->text('content');
             $table->timestamps();
         });
     }
