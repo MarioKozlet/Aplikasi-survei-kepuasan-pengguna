@@ -4,13 +4,14 @@
 
 @section('content')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <h1>Hasil Analisis Survei</h1>
+    <div class="m-2">
+        <h1>Hasil Analisis Survei</h1>
 
-    <!-- Tampilkan total responden, CI, dan CR -->
-    <p>Total Responden: {{ $totalRespondents }}</p>
-    <p>Consistency Index (CI): {{ number_format($CI, 2) }}</p>
-    <p>Consistency Ratio (CR): {{ number_format($CR, 2) }}</p>
-
+        <!-- Tampilkan total responden, CI, dan CR -->
+        <p>Total Responden: {{ $totalRespondents }}</p>
+        <p>Consistency Index (CI): {{ number_format($CI, 2) }}</p>
+        <p>Consistency Ratio (CR): {{ number_format($CR, 2) }}</p>
+    </div>
 
     <!-- Chart untuk Persentase Kepuasan Pengguna -->
     <div style="width: 50%; margin: auto; margin-top: 20px;">
@@ -22,9 +23,9 @@
         <canvas id="ciCrChart"></canvas>
     </div>
 
-    <!-- Tampilkan Matriks Perbandingan Kriteria (AHP) -->
+    <!-- Tampilkan Matriks Perbandingan Kriteria (AHP) dan Hasil Eigen Factor dan Prioritas -->
     <div class="m-4">
-        <h2>Matriks Perbandingan Kriteria (AHP)</h2>
+        <h2>Matriks Perbandingan Kriteria (AHP) dengan Eigen Factor dan Faktor Prioritas</h2>
         <table class="table table-bordered table-light shadow-sm mt-3">
             <thead class="table-light">
                 <tr>
@@ -34,6 +35,7 @@
                     <th>Netral</th>
                     <th>Cukup Puas</th>
                     <th>Sangat Puas</th>
+                    <th>Faktor Prioritas (Eigenvector)</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,11 +57,17 @@
                         @foreach ($row as $value)
                             <td>{{ number_format($value, 2) }}</td>
                         @endforeach
+                        <!-- Menambahkan hasil Faktor Prioritas (Eigenvector) pada tabel -->
+                        <td>{{ number_format($eigenvector[$i], 4) }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
+        <!-- Tampilkan hasil Eigen Factor (λmax) -->
+        <h3>Hasil Eigen Factor (λmax): {{ number_format($lambdaMax, 4) }}</h3>
     </div>
+
     <!-- Chart untuk Perbandingan CI, CR, dan Persentase Kepuasan -->
     {{-- <div style="width: 50%; margin: auto; margin-top: 50px;">
         <canvas id="comparisonChart"></canvas>

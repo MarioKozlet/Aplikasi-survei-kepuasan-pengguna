@@ -49,9 +49,11 @@ class SurveyController extends Controller
             [5, 3, 4, 2, 1]            // Kriteria 5 vs Kriteria lainnya
         ];
 
-        // 4. Perhitungan metode AHP (CI, CR)
+        // 4. Perhitungan metode AHP (CI, CR, dan hasil Eigen Factor dan Prioritas)
         $CI = $this->calculateCI($comparisonMatrix);
         $CR = $this->calculateCR($CI, count($comparisonMatrix));
+        $eigenvector = $this->eigenvector;  // Ambil hasil faktor prioritas
+        $lambdaMax = $this->calculateLambdaMax($comparisonMatrix);  // Ambil hasil Eigen Factor (λmax)
 
         // 5. Penyusunan Hasil Penelitian
         return view('survey.indexSurvey', [
@@ -64,8 +66,11 @@ class SurveyController extends Controller
             'weights' => $weights,
             'CI' => $CI,
             'CR' => $CR,
-            'comparisonMatrix' => $comparisonMatrix  // KIRIM comparisonMatrix KE VIEW
+            'comparisonMatrix' => $comparisonMatrix,  // KIRIM comparisonMatrix KE VIEW
+            'eigenvector' => $eigenvector,  // Kirim Hasil Faktor Prioritas ke view
+            'lambdaMax' => $lambdaMax  // Kirim hasil λmax (Eigen Factor) ke view
         ]);
+
     }
 
 
@@ -86,25 +91,32 @@ class SurveyController extends Controller
     }
 
     // Fungsi untuk menghitung Lambda Maksimum (λmax)
+    // Fungsi untuk menghitung Lambda Maksimum (λmax) dan sekaligus menyimpan eigenvector (faktor prioritas)
     private function calculateLambdaMax($matrix)
     {
         $columnSums = array_map(function ($colIndex) use ($matrix) {
             return array_sum(array_column($matrix, $colIndex));
         }, array_keys($matrix[0]));
 
+        // Menghitung eigenvector (faktor prioritas)
         $eigenvector = array_map(function ($row) use ($columnSums) {
             return array_sum(array_map(function ($value, $colSum) {
                 return $value / $colSum;
             }, $row, $columnSums)) / count($row);
         }, $matrix);
 
+        // Menghitung λmax (Lambda Maksimum)
         $lambdaMax = array_sum(array_map(function ($row, $eigenValue) use ($matrix) {
             return array_sum(array_map(function ($value) use ($eigenValue) {
                 return $value * $eigenValue;
             }, $row));
         }, $matrix, $eigenvector)) / count($eigenvector);
 
+        // Menyimpan eigenvector (faktor prioritas) untuk diakses di luar fungsi
+        $this->eigenvector = $eigenvector;
+
         return $lambdaMax;
     }
+
 }
 
