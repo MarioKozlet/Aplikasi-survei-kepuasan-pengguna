@@ -55,6 +55,20 @@ class SurveyController extends Controller
         $eigenvector = $this->eigenvector;  // Ambil hasil faktor prioritas
         $lambdaMax = $this->calculateLambdaMax($comparisonMatrix);  // Ambil hasil Eigen Factor (λmax)
 
+        // Hitung faktor prioritas (Eigenvector) dan jumlah total Eigen Factor
+        $eigenFactors = [];
+        $totalEigenFactor = 0;
+        foreach ($comparisonMatrix as $i => $row) {
+            $eigenFactor = array_sum($row) / count($row);  // Hitung Eigen Factor
+            $eigenFactors[$i] = $eigenFactor;
+            $totalEigenFactor += $eigenFactor;
+        }
+
+        // Hitung Faktor Prioritas dari Eigen Factor
+        $factorsPrioritas = array_map(function($eigenFactor) use ($totalEigenFactor) {
+            return $eigenFactor / $totalEigenFactor;
+        }, $eigenFactors);
+
         // 5. Penyusunan Hasil Penelitian
         return view('survey.indexSurvey', [
             'totalRespondents' => $totalRespondents,
@@ -66,9 +80,11 @@ class SurveyController extends Controller
             'weights' => $weights,
             'CI' => $CI,
             'CR' => $CR,
-            'comparisonMatrix' => $comparisonMatrix,  // KIRIM comparisonMatrix KE VIEW
-            'eigenvector' => $eigenvector,  // Kirim Hasil Faktor Prioritas ke view
-            'lambdaMax' => $lambdaMax  // Kirim hasil λmax (Eigen Factor) ke view
+            'comparisonMatrix' => $comparisonMatrix,
+            'eigenvector' => $eigenvector,
+            'lambdaMax' => $lambdaMax,
+            'eigenFactors' => $eigenFactors,  // Kirim hasil Eigen Faktor ke view
+            'factorsPrioritas' => $factorsPrioritas,  // Kirim hasil Faktor Prioritas ke view
         ]);
 
     }

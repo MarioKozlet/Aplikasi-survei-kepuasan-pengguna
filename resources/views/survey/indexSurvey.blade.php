@@ -4,9 +4,9 @@
 
 @section('content')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <div class="m-2">
-        <h1>Hasil Analisis Survei</h1>
 
+    <div class="m-4">
+        <h1>Hasil Analisis Survei</h1>
         <!-- Tampilkan total responden, CI, dan CR -->
         <p>Total Responden: {{ $totalRespondents }}</p>
         <p>Consistency Index (CI): {{ number_format($CI, 2) }}</p>
@@ -23,7 +23,7 @@
         <canvas id="ciCrChart"></canvas>
     </div>
 
-    <!-- Tampilkan Matriks Perbandingan Kriteria (AHP) dan Hasil Eigen Factor dan Prioritas -->
+    <!-- Tampilkan Matriks Perbandingan Kriteria (AHP) dengan Eigen Factor dan Faktor Prioritas -->
     <div class="m-4">
         <h2>Matriks Perbandingan Kriteria (AHP) dengan Eigen Factor dan Faktor Prioritas</h2>
         <table class="table table-bordered table-light shadow-sm mt-3">
@@ -35,7 +35,8 @@
                     <th>Netral</th>
                     <th>Cukup Puas</th>
                     <th>Sangat Puas</th>
-                    <th>Faktor Prioritas (Eigenvector)</th>
+                    <th>Eigen Factor</th>
+                    <th>Faktor Prioritas</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,10 +56,11 @@
                             @endif
                         </th>
                         @foreach ($row as $value)
-                            <td>{{ number_format($value, 2) }}</td>
+                            <td>{{ number_format($value, 3) }}</td>
                         @endforeach
-                        <!-- Menambahkan hasil Faktor Prioritas (Eigenvector) pada tabel -->
-                        <td>{{ number_format($eigenvector[$i], 4) }}</td>
+                        <!-- Menambahkan hasil Eigen Factor dan Faktor Prioritas pada tabel -->
+                        <td>{{ number_format($eigenFactors[$i], 3) }}</td>
+                        <td>{{ number_format($factorsPrioritas[$i], 3) }}</td>
                     </tr>
                 @endforeach
             </tbody>
