@@ -3,6 +3,17 @@
 @section('title', 'Survei')
 
 @section('content')
+    <style>
+        #ciCrChart {
+            max-width: 600px;
+            /* Atur lebar maksimal sesuai kebutuhan */
+            max-height: 600px;
+            /* Atur tinggi maksimal sesuai kebutuhan */
+            margin: 0 auto;
+            /* Center the chart */
+        }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <div class="m-4">
@@ -131,7 +142,7 @@
         // Chart untuk Perbandingan CI dan CR
         var ctxCI = document.getElementById('ciCrChart').getContext('2d');
         var ciCrChart = new Chart(ctxCI, {
-            type: 'bar',
+            type: 'pie', // Ubah dari 'bar' menjadi 'pie'
             data: {
                 labels: ['Consistency Index (CI)', 'Consistency Ratio (CR)'],
                 datasets: [{
@@ -150,10 +161,31 @@
             },
             options: {
                 responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 1 // Skala maksimum 1 karena nilai CI dan CR biasanya di bawah 1
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.raw.toFixed(2);
+                                return label;
+                            }
+                        }
+                    },
+                    datalabels: {
+                        display: true,
+                        align: 'center',
+                        anchor: 'center',
+                        color: 'black',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function(value) {
+                            return value.toFixed(2);
+                        }
                     }
                 }
             }
