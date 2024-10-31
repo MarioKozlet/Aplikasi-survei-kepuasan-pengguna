@@ -46,7 +46,6 @@ class UserSeeder extends Seeder
                 'bekerja_efisien' => $faker->numberBetween(1, 5),
                 'bekerja_efektif' => $faker->numberBetween(1, 5),
                 'kepuasan_keseluruhan' => $faker->numberBetween(1, 5),
-                'additional_feedback' => $faker->numberBetween(1, 5),
 
                 // 'name' => $faker->name(),
                 // 'ease_of_use' => $faker->numberBetween(1, 5),
