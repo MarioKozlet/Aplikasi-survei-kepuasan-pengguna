@@ -57,6 +57,11 @@
                         </li>
                         <li class="menu-item">
                             <a href="{{ route('survey.index') }}" class="menu-link">
+                                <div data-i18n="Account">Survei Analisis CI&CR</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="{{ route('survey.ci-cr') }}" class="menu-link">
                                 <div data-i18n="Account">Survei Analisis</div>
                             </a>
                         </li>

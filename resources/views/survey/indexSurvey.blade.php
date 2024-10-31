@@ -3,36 +3,23 @@
 @section('title', 'Survei')
 
 @section('content')
-    <style>
-        #ciCrChart {
-            max-width: 600px;
-            /* Atur lebar maksimal sesuai kebutuhan */
-            max-height: 600px;
-            /* Atur tinggi maksimal sesuai kebutuhan */
-            margin: 0 auto;
-            /* Center the chart */
-        }
-    </style>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 
     <div class="m-4">
-        <h1>Hasil Analisis Survei</h1>
+        <h1>Hasil Analisis Survei CI & CR</h1>
         <!-- Tampilkan total responden, CI, dan CR -->
-        <p>Total Responden: {{ $totalRespondents }}</p>
         <p>Consistency Index (CI): {{ number_format($CI, 2) }}</p>
         <p>Consistency Ratio (CR): {{ number_format($CR, 2) }}</p>
     </div>
 
-    <!-- Chart untuk Persentase Kepuasan Pengguna -->
-    <div style="width: 50%; margin: auto; margin-top: 20px;">
-        <canvas id="satisfactionChart"></canvas>
-    </div>
-
     <!-- Chart untuk Perbandingan CI dan CR -->
-    <div style="width: 50%; margin: auto; margin-top: 50px;">
+    <div style="width: 45%; margin: auto; margin-top: 50px;">
         <canvas id="ciCrChart"></canvas>
     </div>
+
 
     <!-- Tampilkan Matriks Perbandingan Kriteria (AHP) dengan Eigen Factor dan Faktor Prioritas -->
     <div class="m-4">
@@ -87,53 +74,9 @@
     </div> --}}
 
     <script>
-        // Data persentase untuk setiap kategori kepuasan pengguna
-        var percentData = [
-            {{ $percent1 }},
-            {{ $percent2 }},
-            {{ $percent3 }},
-            {{ $percent4 }},
-            {{ $percent5 }}
-        ];
+        // Daftarkan plugin datalabels
+        Chart.register(ChartDataLabels);
 
-        // Chart untuk Persentase Kepuasan Pengguna
-        var ctx = document.getElementById('satisfactionChart').getContext('2d');
-        var satisfactionChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Tidak Puas', 'Kurang Puas', 'Netral', 'Cukup Puas', 'Sangat Puas'],
-                datasets: [{
-                    label: 'Persentase Kepuasan Pengguna (%)',
-                    data: percentData,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(255, 205, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(54, 162, 235, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100 // Skala maksimum 100% untuk persentase
-                    }
-                }
-            }
-        });
-
-        // Data CI dan CR untuk perbandingan
         var ciCrData = [
             {{ number_format($CI, 2) }},
             {{ number_format($CR, 2) }}
@@ -142,7 +85,7 @@
         // Chart untuk Perbandingan CI dan CR
         var ctxCI = document.getElementById('ciCrChart').getContext('2d');
         var ciCrChart = new Chart(ctxCI, {
-            type: 'pie', // Ubah dari 'bar' menjadi 'pie'
+            type: 'pie',
             data: {
                 labels: ['Consistency Index (CI)', 'Consistency Ratio (CR)'],
                 datasets: [{
@@ -181,10 +124,13 @@
                         color: 'black',
                         font: {
                             weight: 'bold',
-                            size: 12
+                            size: 16 // Ukuran tulisan lebih besar agar mudah dibaca
                         },
-                        formatter: function(value) {
-                            return value.toFixed(2);
+                        formatter: function(value, context) {
+                            let total = context.dataset.data.reduce((a, b) => a + b,
+                                0); // Jumlahkan semua nilai
+                            let percentage = (value / total * 100).toFixed(2); // Hitung persentase
+                            return percentage + '%'; // Tampilkan dalam format persentase
                         }
                     }
                 }

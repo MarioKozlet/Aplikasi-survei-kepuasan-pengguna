@@ -31,4 +31,5 @@ Route::get('/data', [SurveyDataController::class, 'index'])->name('data.index');
 Route::post('/import', [SurveyDataController::class, 'import'])->name('data.import');
 
 Route::get('/survey', [SurveyController::class, 'indexSurvey'])->name('survey.index');
+Route::get('/survey/ci-cr', [SurveyController::class, 'indexCiCr'])->name('survey.ci-cr');
 // Route::get('/survey/analisis', [SurveyController::class, 'indexAnalysisSurvey'])->name('survey.analysis');
