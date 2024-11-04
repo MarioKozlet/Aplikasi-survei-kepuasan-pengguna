@@ -28,3 +28,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dasboard.
 
 Route::get('/survey', [SurveyController::class, 'indexSurvey'])->name('survey.index');
 Route::get('/survey/analisis', [SurveyController::class, 'indexAnalysisSurvey'])->name('survey.analysis');
+Route::get('/survey/analisis/umur', [SurveyController::class, 'indexUmur'])->name('survey.umur');
+Route::get('/survey/analisis/jenis-kelamin', [SurveyController::class, 'indexJenisKelamin'])->name('survey.jk');
+Route::get('/survey/analisis/pekerjaan', [SurveyController::class, 'indexPekerjaan'])->name('survey.pekerjaan');
+Route::get('/survey/analisis/alamat', [SurveyController::class, 'indexAlamat'])->name('survey.alamat');
+Route::get('/survey/analisis/lama-pengunaan', [SurveyController::class, 'indexLamaPenggunaan'])->name('survey.lama-pengunaan');

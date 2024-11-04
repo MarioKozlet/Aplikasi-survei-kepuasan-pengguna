@@ -12,11 +12,16 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $faker = FakerFactory::create('id_ID');
-
         foreach (range(1, 500) as $index) {
-            DB::table('surveys')->insert([
+            // Pilih jenis kelamin terlebih dahulu
+            $gender = $faker->randomElement(['L', 'P']);
+    
+            // Sesuaikan nama berdasarkan jenis kelamin
+            $name = ($gender == 'L') ? $faker->name('male') : $faker->name('female');
 
-                'name' => $faker->name(),
+            DB::table('surveys')->insert([
+                'name' => $name,
+                'jk' => $gender,
                 'pekerjaan' => $faker->randomElement(['Pegawai Negeri Sipil (PNS)', 'Karyawaan Swasta', 'Wirausaha', 'IRT', 'Tenaga Kesehatan', 'THL (Tenaga Lepas Harian)']),
                 'alamat' => $faker->randomElement(['Abeli', 'Baruga', 'Kadia', 'Kambu', 'Kendari Barat', 'Mandonga', 'Nambo', 'Poasia', 'Puuwatu', 'Wua-wua']),
                 'usia' => $faker->numberBetween(20, 60),
