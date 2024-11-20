@@ -26,7 +26,7 @@
         <br>
         <div class="row">
             <div class="col-md-12">
-                <h4>Grafik Status Kepuasan Pengguna</h4>
+                <h4>Grafik Tingkat Kepuasan Pengguna</h4>
                 <canvas id="lineChart"></canvas> <!-- Canvas for Line Chart -->
             </div>
         </div>
@@ -85,7 +85,7 @@
                                     if (label) {
                                         label += ': ';
                                     }
-                                    label += context.raw.toFixed(2) + '%';
+                                    label += context.raw + '%';
                                     return label;
                                 }
                             }
@@ -100,7 +100,7 @@
                                 size: 12
                             },
                             formatter: function(value) {
-                                return value.toFixed(2) + '%';
+                                return value + '%';
                             }
                         }
                     },

@@ -81,8 +81,7 @@
                                     if (label) {
                                         label += ': ';
                                     }
-                                    label += context.raw.toFixed(
-                                        2) + '%'; // Hapus '%' jika data bukan persentase
+                                    label += context.raw + '%'; // Hapus '%' jika data bukan persentase
                                     return label;
                                 }
                             }
@@ -97,7 +96,7 @@
                                 size: 12
                             },
                             formatter: function(value) {
-                                return value.toFixed(2) + '%'; // Hapus '%' jika tidak relevan
+                                return value + '%'; // Hapus '%' jika tidak relevan
                             }
                         }
                     },

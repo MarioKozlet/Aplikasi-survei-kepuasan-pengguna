@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Survey;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\SurveyImport;
 use Illuminate\Support\Facades\Log;
 
 class SurveyController extends Controller
@@ -13,50 +15,52 @@ class SurveyController extends Controller
         // Ambil semua data survei
         $surveys = Survey::all();
 
+        // Definisikan skala kepuasan
         $satisfactionScaleLine = [
-            1 => 'SP',
-            2 => 'P',
-            3 => 'CP',
-            4 => 'KP',
-            5 => 'TP',
+            5 => 'SP', // Sangat Puas
+            4 => 'P',  // Puas
+            3 => 'CP', // Cukup Puas
+            2 => 'KP', // Kurang Puas
+            1 => 'TP'  // Tidak Puas
         ];
 
-        // Data total untuk setiap jawaban STS, TS, N, S, SS
+        // Inisialisasi total respons untuk setiap kategori
         $totalResponses = [
             'SP' => 0,
             'P' => 0,
             'CP' => 0,
             'KP' => 0,
-            'TP' => 0,
+            'TP' => 0
         ];
 
-        // Jumlah total semua jawaban
-        $totalSurveyCount = 0;
+        // Nama field yang ada di database untuk diukur
+        $fields = ['kepuasan_pengguna'];
 
-        // Nama field yang ada di database
-        $fields = [
-            'kepuasan_pengguna'
-        ];
-
-        // Proses data survei untuk menghitung total jawaban
+        // Hitung jumlah responden yang memilih setiap kategori
         foreach ($surveys as $survey) {
             foreach ($fields as $field) {
-                $answer = $survey->$field; // $answer adalah angka (1, 2, 3, 4, 5)
+                $answer = $survey->$field; // Mengambil nilai jawaban (angka 1-5)
+
                 if (isset($satisfactionScaleLine[$answer])) {
-                    $responseLabel = $satisfactionScaleLine[$answer]; // Konversi angka menjadi STS, TS, N, S, SS
-                    // Tambahkan ke total jawaban untuk kategori yang sesuai (STS, TS, N, S, SS)
+                    $responseLabel = $satisfactionScaleLine[$answer];
+                    
+                    // Tambahkan ke total jawaban untuk kategori yang sesuai
                     $totalResponses[$responseLabel]++;
-                    $totalSurveyCount++;
                 }
             }
         }
 
-        // Hitung persentase untuk setiap jawaban
+        // Hitung total survei yang valid
+        $totalSurveyCount = count($surveys);
+
+        // Hitung persentase untuk setiap kategori jawaban
         $percentageResponses = array_map(function ($count) use ($totalSurveyCount) {
-            return ($totalSurveyCount > 0) ? ($count / $totalSurveyCount) * 100 : 0;
+            return ($totalSurveyCount > 0) ? round(($count / $totalSurveyCount) * 100) : 0;
         }, $totalResponses);
 
-        return view('survey.indexSurvey', compact('percentageResponses'));
+
+        // Kirim data ke view
+        return view('survey.indexSurvey', compact('totalResponses', 'percentageResponses'));
     }
 
     public function indexUmur()
@@ -64,54 +68,34 @@ class SurveyController extends Controller
         // Ambil semua data survei
         $surveys = Survey::all();
 
-        // Inisialisasi array untuk menyimpan data kepuasan berdasarkan kelompok umur
-        $ageGroupsSatisfaction = [
-            '20-35' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            '36-45' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            '46-60' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
+        // Inisialisasi array untuk menyimpan jumlah responden berdasarkan kelompok umur
+        $respondentCount = [
+            '20-35' => 0,
+            '36-45' => 0,
+            '46-60' => 0,
         ];
 
-        $satisfactionScale = [
-            'STS' => 1,
-            'TS' => 2,
-            'N' => 3,
-            'S' => 4,
-            'SS' => 5,
-        ];
-
-        // Ambil data dan hitung kepuasan
+        // Ambil data dan hitung jumlah responden berdasarkan kelompok umur
         foreach ($surveys as $survey) {
             $age = $survey->usia;
-            $kepuasanPengguna = $survey->kepuasan_pengguna;
 
+            // Kategorikan responden berdasarkan usia
             if ($age >= 20 && $age <= 35) {
-                $ageGroupsSatisfaction['20-35']['total_score'] += $kepuasanPengguna;
-                $ageGroupsSatisfaction['20-35']['total_count']++;
+                $respondentCount['20-35']++;
             } elseif ($age >= 36 && $age <= 45) {
-                $ageGroupsSatisfaction['36-45']['total_score'] += $kepuasanPengguna;
-                $ageGroupsSatisfaction['36-45']['total_count']++;
+                $respondentCount['36-45']++;
             } elseif ($age >= 46 && $age <= 60) {
-                $ageGroupsSatisfaction['46-60']['total_score'] += $kepuasanPengguna;
-                $ageGroupsSatisfaction['46-60']['total_count']++;
+                $respondentCount['46-60']++;
             }
         }
 
-        // Hitung rata-rata kepuasan untuk setiap kelompok umur dalam bentuk persentase
-        foreach ($ageGroupsSatisfaction as $ageGroup => &$group) {
-            if ($group['total_count'] > 0) {
-                // Hitung rata-rata kepuasan dan konversikan ke persen
-                $average_satisfaction = $group['total_score'] / $group['total_count'];
-                $group['average_satisfaction'] = ($average_satisfaction / 5) * 100;
-            } else {
-                $group['average_satisfaction'] = 0; // Atur ke 0 jika tidak ada responden
-            }
-        }
+        // Siapkan data untuk grafik atau tabel
+        $ageLabels = array_keys($respondentCount);
+        $ageData = $respondentCount;
+        // dd($respondentCount);
 
-        // Siapkan data untuk grafik
-        $ageLabels = array_keys($ageGroupsSatisfaction);
-        $ageData = array_map(fn($group) => $group['average_satisfaction'], $ageGroupsSatisfaction);
-
-        return view('survey.indexSurveyUmur', compact('ageLabels', 'ageData'));
+        // Kirim data ke view
+        return view('survey.indexSurveyUmur', compact('ageLabels', 'ageData', 'respondentCount'));
     }
 
 
@@ -120,97 +104,72 @@ class SurveyController extends Controller
         // Ambil semua data survei
         $surveys = Survey::all();
 
-        // Inisialisasi array untuk menyimpan data kepuasan berdasarkan jenis kelamin
-        $genderSatisfaction = [
-            'L' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'P' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
+        // Inisialisasi array untuk menyimpan jumlah responden berdasarkan jenis kelamin
+        $respondentCount = [
+            'L' => 0, // Laki-laki
+            'P' => 0  // Perempuan
         ];
 
-        $satisfactionScale = [
-            'STS' => 1,
-            'TS' => 2,
-            'N' => 3,
-            'S' => 4,
-            'SS' => 5,
-        ];
-
-        // Ambil data dan hitung kepuasan berdasarkan jenis kelamin
+        // Hitung jumlah responden berdasarkan jenis kelamin
         foreach ($surveys as $survey) {
             $gender = $survey->jk; // Mengambil nilai jenis kelamin (L/P)
-            $kepuasanPengguna = $survey->kepuasan_pengguna;
+            // dd($gender);
 
+            // Pastikan hanya menghitung jika jenis kelamin adalah 'L' atau 'P'
             if (in_array($gender, ['L', 'P'])) {
-                $genderSatisfaction[$gender]['total_score'] += $kepuasanPengguna;
-                $genderSatisfaction[$gender]['total_count']++;
+                $respondentCount[$gender]++;
             }
         }
 
-        // Hitung rata-rata kepuasan untuk setiap jenis kelamin dalam bentuk persentase
-        foreach ($genderSatisfaction as $gender => &$group) {
-            if ($group['total_count'] > 0) {
-                // Hitung rata-rata kepuasan dan konversikan ke persen
-                $average_satisfaction = $group['total_score'] / $group['total_count'];
-                $group['average_satisfaction'] = ($average_satisfaction / 5) * 100;
-            } else {
-                $group['average_satisfaction'] = 0; // Atur ke 0 jika tidak ada responden
-            }
-        }
+        // Siapkan data untuk grafik atau tabel
+        $genderLabels = array_keys($respondentCount);
+        $genderData = $respondentCount;
 
-        // Siapkan data untuk grafik
-        $genderLabels = array_keys($genderSatisfaction);
-        $genderData = array_map(fn($group) => $group['average_satisfaction'], $genderSatisfaction);
-
-        return view('survey.indexSurveyJK', compact('genderLabels', 'genderData'));
+        // Kirim data ke view
+        return view('survey.indexSurveyJK', compact('genderLabels', 'genderData', 'respondentCount'));
     }
+
 
     public function indexPekerjaan()
     {
         // Ambil semua data survei
         $surveys = Survey::all();
 
-        // Inisialisasi array untuk menyimpan data kepuasan berdasarkan jenis pekerjaan
+        // Inisialisasi array untuk menyimpan data jumlah responden berdasarkan jenis pekerjaan
         $jobSatisfaction = [
-            'Pegawai Negeri Sipil (PNS)' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Karyawan Swasta' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Wirausaha' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'IRT' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Tenaga Kesehatan' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'THL (Tenaga Lepas Harian)' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
+            'Pegawai Negeri Sipil (PNS)' => ['count' => 0, 'percentage' => 0],
+            'Karyawan Swasta' => ['count' => 0, 'percentage' => 0],
+            'Wirausaha' => ['count' => 0, 'percentage' => 0],
+            'IRT' => ['count' => 0, 'percentage' => 0],
+            'Tenaga Kesehatan' => ['count' => 0, 'percentage' => 0],
+            'THL (Tenaga Lepas Harian)' => ['count' => 0, 'percentage' => 0],
         ];
 
-        $satisfactionScale = [
-            'STS' => 1,
-            'TS' => 2,
-            'N' => 3,
-            'S' => 4,
-            'SS' => 5,
-        ];
+        // Hitung total responden
+        $totalRespondents = $surveys->count();
 
-        // Ambil data dan hitung kepuasan berdasarkan jenis pekerjaan
+        // Hitung jumlah responden untuk setiap jenis pekerjaan
         foreach ($surveys as $survey) {
             $job = $survey->pekerjaan; // Mengambil nilai pekerjaan
-            $kepuasanPengguna = $survey->kepuasan_pengguna;
 
+            // Jika pekerjaan sesuai dengan yang diinisialisasi, tambahkan count
             if (array_key_exists($job, $jobSatisfaction)) {
-                $jobSatisfaction[$job]['total_score'] += $kepuasanPengguna;
-                $jobSatisfaction[$job]['total_count']++;
+                $jobSatisfaction[$job]['count']++;
             }
         }
 
-        // Hitung rata-rata kepuasan untuk setiap jenis pekerjaan dalam bentuk persentase
+        // Hitung persentase responden untuk setiap jenis pekerjaan dan bulatkan ke angka bulat
         foreach ($jobSatisfaction as $job => &$group) {
-            if ($group['total_count'] > 0) {
-                // Hitung rata-rata kepuasan dan konversikan ke persen
-                $average_satisfaction = $group['total_score'] / $group['total_count'];
-                $group['average_satisfaction'] = ($average_satisfaction / 5) * 100;
+            if ($totalRespondents > 0) {
+                $group['percentage'] = round(($group['count'] / $totalRespondents) * 100);
             } else {
-                $group['average_satisfaction'] = 0; // Atur ke 0 jika tidak ada responden
+                $group['percentage'] = 0; // Atur ke 0 jika tidak ada responden
             }
         }
 
         // Siapkan data untuk grafik
         $jobLabels = array_keys($jobSatisfaction);
-        $jobData = array_map(fn($group) => $group['average_satisfaction'], $jobSatisfaction);
+        $jobData = array_map(fn($group) => $group['percentage'], $jobSatisfaction);
 
         return view('survey.indexSurveyPekerjaan', compact('jobLabels', 'jobData'));
     }
@@ -220,55 +179,36 @@ class SurveyController extends Controller
         // Ambil semua data survei
         $surveys = Survey::all();
 
-        // Inisialisasi array untuk menyimpan data kepuasan berdasarkan alamat
-        $locationSatisfaction = [
-            'Abeli' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Baruga' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Kadia' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Kambu' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Kendari Barat' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Mandonga' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Nambo' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Poasia' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Puuwatu' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            'Wua-wua' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
+        // Inisialisasi array untuk menyimpan jumlah responden berdasarkan alamat
+        $respondentCount = [
+            'Abeli' => 0,
+            'Baruga' => 0,
+            'Kadia' => 0,
+            'Kambu' => 0,
+            'Kendari Barat' => 0,
+            'Mandonga' => 0,
+            'Nambo' => 0,
+            'Poasia' => 0,
+            'Puuwatu' => 0,
+            'Wua-wua' => 0,
         ];
 
-        $satisfactionScale = [
-            'STS' => 1,
-            'TS' => 2,
-            'N' => 3,
-            'S' => 4,
-            'SS' => 5,
-        ];
-
-        // Ambil data dan hitung kepuasan berdasarkan alamat
+        // Hitung jumlah responden berdasarkan alamat
         foreach ($surveys as $survey) {
             $location = $survey->alamat; // Mengambil nilai alamat
-            $kepuasanPengguna = $survey->kepuasan_pengguna;
 
-            if (array_key_exists($location, $locationSatisfaction)) {
-                $locationSatisfaction[$location]['total_score'] += $kepuasanPengguna;
-                $locationSatisfaction[$location]['total_count']++;
+            // Pastikan alamat ada dalam daftar $respondentCount sebelum menghitung
+            if (array_key_exists($location, $respondentCount)) {
+                $respondentCount[$location]++;
             }
         }
 
-        // Hitung rata-rata kepuasan untuk setiap alamat dalam bentuk persentase
-        foreach ($locationSatisfaction as $location => &$group) {
-            if ($group['total_count'] > 0) {
-                // Hitung rata-rata kepuasan dan konversikan ke persen
-                $average_satisfaction = $group['total_score'] / $group['total_count'];
-                $group['average_satisfaction'] = ($average_satisfaction / 5) * 100;
-            } else {
-                $group['average_satisfaction'] = 0; // Atur ke 0 jika tidak ada responden
-            }
-        }
+        // Siapkan data untuk grafik atau tabel
+        $locationLabels = array_keys($respondentCount);
+        $locationData = $respondentCount;
 
-        // Siapkan data untuk grafik
-        $locationLabels = array_keys($locationSatisfaction);
-        $locationData = array_map(fn($group) => $group['average_satisfaction'], $locationSatisfaction);
-
-        return view('survey.indexSurveyAlamat', compact('locationLabels', 'locationData'));
+        // Kirim data ke view
+        return view('survey.indexSurveyAlamat', compact('locationLabels', 'locationData', 'respondentCount'));
     }
 
     public function indexLamaPenggunaan()
@@ -276,51 +216,52 @@ class SurveyController extends Controller
         // Ambil semua data survei
         $surveys = Survey::all();
 
-        // Inisialisasi array untuk menyimpan data kepuasan berdasarkan lama penggunaan
-        $usageDurationSatisfaction = [
-            '1 Tahun' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            '2 Tahun' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            '3-4 Tahun' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
-            '5 Tahun' => ['total_score' => 0, 'total_count' => 0, 'average_satisfaction' => 0],
+        // Inisialisasi array untuk menyimpan jumlah responden berdasarkan lama penggunaan
+        $respondentCount = [
+            '1 Tahun' => 0,
+            '2 Tahun' => 0,
+            '3-4 Tahun' => 0,
+            '5 Tahun' => 0,
         ];
 
-        $satisfactionScale = [
-            'STS' => 1,
-            'TS' => 2,
-            'N' => 3,
-            'S' => 4,
-            'SS' => 5,
-        ];
-
-        // Ambil data dan hitung kepuasan berdasarkan lama penggunaan
+        // Hitung jumlah responden berdasarkan lama penggunaan
         foreach ($surveys as $survey) {
             $usageDuration = $survey->lama_penggunaan; // Mengambil nilai lama penggunaan
-            $kepuasanPengguna = $survey->kepuasan_pengguna;
 
-            if (array_key_exists($usageDuration, $usageDurationSatisfaction)) {
-                $usageDurationSatisfaction[$usageDuration]['total_score'] += $kepuasanPengguna;
-                $usageDurationSatisfaction[$usageDuration]['total_count']++;
+            // Pastikan lama penggunaan ada dalam daftar $respondentCount sebelum menghitung
+            if (array_key_exists($usageDuration, $respondentCount)) {
+                $respondentCount[$usageDuration]++;
             }
         }
 
-        // Hitung rata-rata kepuasan untuk setiap lama penggunaan dalam bentuk persentase
-        foreach ($usageDurationSatisfaction as $duration => &$group) {
-            if ($group['total_count'] > 0) {
-                // Hitung rata-rata kepuasan dan konversikan ke persen
-                $average_satisfaction = $group['total_score'] / $group['total_count'];
-                $group['average_satisfaction'] = ($average_satisfaction / 5) * 100;
-            } else {
-                $group['average_satisfaction'] = 0; // Atur ke 0 jika tidak ada responden
-            }
-        }
+        // Siapkan data untuk grafik atau tabel
+        $durationLabels = array_keys($respondentCount);
+        $durationData = $respondentCount;
 
-        // Siapkan data untuk grafik
-        $durationLabels = array_keys($usageDurationSatisfaction);
-        $durationData = array_map(fn($group) => $group['average_satisfaction'], $usageDurationSatisfaction);
-
-        return view('survey.indexSurveyLamaPenggunaan', compact('durationLabels', 'durationData'));
+        // Kirim data ke view
+        return view('survey.indexSurveyLamaPenggunaan', compact('durationLabels', 'durationData', 'respondentCount'));
     }
 
+
+    public function dataSurvey()
+    {
+        $data = Survey::simplePaginate(10);
+
+        return view('survey.dataSurvey', compact('data'));
+    }
+
+    public function importSurvey(Request $request)
+    {
+        $file = $request->file('file');
+
+        // Pastikan file diunggah sebelum menjalankan import
+        if ($file) {
+            Excel::import(new SurveyImport, $file);
+            return redirect()->back()->with('success', 'Data berhasil diimpor!');
+        } else {
+            return redirect()->back()->with('error', 'File tidak ditemukan!');
+        }
+    }
 
     // Helper function untuk menentukan kelompok umur
     private function getAgeGroup($age)

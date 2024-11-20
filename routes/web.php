@@ -33,3 +33,6 @@ Route::get('/survey/analisis/jenis-kelamin', [SurveyController::class, 'indexJen
 Route::get('/survey/analisis/pekerjaan', [SurveyController::class, 'indexPekerjaan'])->name('survey.pekerjaan');
 Route::get('/survey/analisis/alamat', [SurveyController::class, 'indexAlamat'])->name('survey.alamat');
 Route::get('/survey/analisis/lama-pengunaan', [SurveyController::class, 'indexLamaPenggunaan'])->name('survey.lama-pengunaan');
+
+Route::get('/data/survey', [SurveyController::class, 'dataSurvey'])->name('survey.data');
+Route::post('/import', [SurveyController::class, 'importSurvey'])->name('survey.import');

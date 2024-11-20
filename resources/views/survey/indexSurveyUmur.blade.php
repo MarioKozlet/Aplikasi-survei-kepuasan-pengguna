@@ -23,7 +23,6 @@
 
     <div class="container">
         <h3 class="m-4">Analisis Kepuasan Pengguna Berdasarkan Umur</h3>
-
         <div class="row">
             <div class="col-md-12">
                 <h4>Rata-rata Kepuasan Pengguna Berdasarkan Kelompok Umur</h4>
@@ -82,8 +81,7 @@
                                     if (label) {
                                         label += ': ';
                                     }
-                                    label += context.raw.toFixed(
-                                        2) + '%'; // Hapus '%' jika data bukan persentase
+                                    label += context.raw + '%'; // Hapus '%' jika data bukan persentase
                                     return label;
                                 }
                             }
@@ -98,7 +96,7 @@
                                 size: 12
                             },
                             formatter: function(value) {
-                                return value.toFixed(2) + '%'; // Hapus ' % ' jika tidak relevan
+                                return value + '%'; // Hapus ' % ' jika tidak relevan
                             }
                         }
                     },

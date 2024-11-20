@@ -89,7 +89,7 @@
                                     if (label) {
                                         label += ': ';
                                     }
-                                    label += context.raw.toFixed(2) +
+                                    label += context.raw +
                                         '%'; // Tambahkan '%' untuk menampilkan dalam bentuk persentase
                                     return label;
                                 }
@@ -105,7 +105,7 @@
                                 size: 12
                             },
                             formatter: function(value) {
-                                return value.toFixed(2) + '%'; // Tambahkan '%' untuk data label
+                                return value + '%'; // Tambahkan '%' untuk data label
                             }
                         }
                     },

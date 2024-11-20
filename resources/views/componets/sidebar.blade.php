@@ -51,7 +51,7 @@
                     </a>
                     <ul class="menu-sub">
                         <li class="menu-item">
-                            <a href="{{ route('survey.index') }}" class="menu-link">
+                            <a href="{{ route('survey.data') }}" class="menu-link">
                                 <div data-i18n="Account">Data Survei</div>
                             </a>
                         </li>

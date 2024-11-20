@@ -57,7 +57,7 @@
                         label: 'Rata-rata Kepuasan Pengguna Berdasarkan Pekerjaan',
                         data: [
                             jobData['Pegawai Negeri Sipil (PNS)'] || 0,
-                            jobData['Karyawaan Swasta'] || 0,
+                            jobData['Karyawan Swasta'] || 0,
                             jobData['Wirausaha'] || 0,
                             jobData['IRT'] || 0,
                             jobData['Tenaga Kesehatan'] || 0,
@@ -96,8 +96,8 @@
                                     if (label) {
                                         label += ': ';
                                     }
-                                    label += (context.raw || 0).toFixed(2) +
-                                    '%'; // Pastikan nilai ada atau beri nilai default 0
+                                    label += (context.raw || 0) +
+                                        '%'; // Pastikan nilai ada atau beri nilai default 0
                                     return label;
                                 }
                             }
@@ -112,8 +112,8 @@
                                 size: 12
                             },
                             formatter: function(value) {
-                                return (value || 0).toFixed(2) +
-                                '%'; // Pastikan nilai ada atau beri nilai default 0
+                                return (value || 0) +
+                                    '%'; // Pastikan nilai ada atau beri nilai default 0
                             }
                         }
                     },
